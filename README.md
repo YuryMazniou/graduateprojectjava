@@ -1,1 +1,1 @@
-# graduateprojectjava
+# Выпускной проект
