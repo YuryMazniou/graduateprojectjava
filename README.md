@@ -1,1 +1,1 @@
-# Выпускной проект
+# Graduate Project
