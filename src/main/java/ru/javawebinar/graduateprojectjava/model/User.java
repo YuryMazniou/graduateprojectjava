@@ -7,10 +7,8 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class User {
-    public static final int START_SEQ = 100000;
+public class User extends AbstractBaseEntity{
 
-    private Integer id_user;
     private String name;
     private String email;
     private String password;
@@ -20,13 +18,17 @@ public class User {
 
     public User() {
     }
+
+    public User(User u) {
+        this(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.isEnabled(), u.getRegistered(), u.getRoles());
+    }
+
     public User(Integer id, String name, String email, String password, Role role, Role... roles) {
         this(id, name, email, password, true, new Date(), EnumSet.of(role, roles));
     }
 
-    public User(Integer id_user, String name, String email, String password, boolean enabled, Date registered, Set<Role> roles) {
-        this.id_user = id_user;
-        this.name = name;
+    public User(Integer id, String name, String email, String password, boolean enabled, Date registered, Collection<Role> roles) {
+        super(id);
         this.email = email;
         this.password = password;
         this.enabled = enabled;
@@ -34,12 +36,12 @@ public class User {
         setRoles(roles);
     }
 
-    public Integer getId_user() {
-        return id_user;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setId_user(Integer id_user) {
-        this.id_user = id_user;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getName() {
@@ -66,14 +68,6 @@ public class User {
         this.password = password;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public Date getRegistered() {
         return registered;
     }
@@ -92,12 +86,10 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id_user=" + id_user +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
+                "id=" + id +
+                ", email=" + email +
+                ", name=" + name +
                 ", enabled=" + enabled +
-                ", registered=" + registered +
                 ", roles=" + roles +
                 '}';
     }

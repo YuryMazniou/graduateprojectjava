@@ -1,11 +1,11 @@
 package ru.javawebinar.graduateprojectjava.web;
 
 
-import ru.javawebinar.graduateprojectjava.model.User;
+import ru.javawebinar.graduateprojectjava.model.AbstractBaseEntity;
 
 public class SecurityUtil {
 
-    private static int id = User.START_SEQ;
+    private static int id = AbstractBaseEntity.START_SEQ;
 
     private SecurityUtil() {
     }
