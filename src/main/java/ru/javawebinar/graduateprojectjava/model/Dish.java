@@ -1,35 +1,52 @@
 package ru.javawebinar.graduateprojectjava.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "dishes",uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_dish"}, name = "dishes_idx")})
 public class Dish extends AbstractBaseEntity {
-    private Integer restaurant_id;
+    @OneToOne(fetch = FetchType.EAGER)
+    @NotNull
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
+    @Column(name = "description")
+    @NotBlank
     private String description;
+
+    @Column(name = "price")
+    @NotEmpty
     private BigDecimal price;
+
+    @Column(name = "time_create_dish", nullable = false)
+    @NotNull
     private LocalDateTime time_create_dish;
 
     public Dish() {
     }
 
-    public Dish(Integer restaurant_id, String description, BigDecimal price, LocalDateTime time_create_dish) {
-        this(null,restaurant_id,description,price,time_create_dish);
+    public Dish( String description, BigDecimal price, LocalDateTime time_create_dish) {
+        this(null,description,price,time_create_dish);
     }
 
-    public Dish(Integer id,Integer restaurant_id, String description, BigDecimal price, LocalDateTime time_create_dish) {
+    public Dish(Integer id, String description, BigDecimal price, LocalDateTime time_create_dish) {
         super(id);
-        this.restaurant_id = restaurant_id;
         this.description = description;
         this.price = price;
         this.time_create_dish = time_create_dish;
     }
 
-    public Integer getRestaurant_id() {
-        return restaurant_id;
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
-    public void setRestaurant_id(Integer restaurant_id) {
-        this.restaurant_id = restaurant_id;
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
     public String getDescription() {

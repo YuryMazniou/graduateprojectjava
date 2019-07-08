@@ -1,21 +1,45 @@
 package ru.javawebinar.graduateprojectjava.model;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
+@Entity
+@Table(name = "restaurants")
 public class Restaurant extends AbstractBaseEntity {
+    @Column(name = "description")
+    @NotBlank
     private String description;
-    private Integer user_id;
+
+    @OneToOne
+    @NotNull
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id")
+    @OrderBy("time_create_dish desc")
+    private List<Dish> dishes;
 
     public Restaurant() {
     }
 
-    public Restaurant(String description, Integer user_id) {
-        this(null,description,user_id);
+    public Restaurant(String description) {
+        this(null,description);
     }
 
-    public Restaurant(Integer id,String description, Integer user_id) {
+    public Restaurant(Integer id,String description) {
         super(id);
         this.description = description;
-        this.user_id = user_id;
+    }
+
+    public List<Dish> getDishes() {
+        return dishes;
+    }
+
+    public void setDishes(List<Dish> dishes) {
+        this.dishes = dishes;
     }
 
     public String getDescription() {
@@ -26,11 +50,11 @@ public class Restaurant extends AbstractBaseEntity {
         this.description = description;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
