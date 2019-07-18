@@ -1,5 +1,6 @@
 package ru.javawebinar.graduateprojectjava.util;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class DateTimeUtil {
@@ -13,5 +14,8 @@ public class DateTimeUtil {
     public static boolean getTimeForAdmin(){
         LocalTime now=LocalTime.now();
         return now.isBefore(time9);
+    }
+    public static LocalDate today(){
+        return LocalDate.now();
     }
 }
