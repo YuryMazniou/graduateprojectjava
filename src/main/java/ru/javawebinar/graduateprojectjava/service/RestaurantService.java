@@ -12,21 +12,20 @@ import ru.javawebinar.graduateprojectjava.repository.UserRepository;
 import ru.javawebinar.graduateprojectjava.repository.VoteRepository;
 import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
 import ru.javawebinar.graduateprojectjava.util.DateTimeUtil;
-import ru.javawebinar.graduateprojectjava.util.RestaurantUtil;
-import ru.javawebinar.graduateprojectjava.util.exception.WrongTimeException;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.javawebinar.graduateprojectjava.util.RestaurantAndUsersUtil.*;
+import static ru.javawebinar.graduateprojectjava.util.ValidationUtil.*;
+
 @Service
 @Transactional(readOnly = true)
 public class RestaurantService {
-
     private RestaurantRepository restaurantRepository;
     private DishRepository dishRepository;
     private VoteRepository voteRepository;
     private UserRepository userRepository;
-
     @Autowired
     public RestaurantService(RestaurantRepository restaurantRepository, DishRepository dishRepository
             , VoteRepository voteRepository, UserRepository userRepository) {
@@ -36,30 +35,28 @@ public class RestaurantService {
         this.userRepository = userRepository;
     }
 
+
+
     @Cacheable("restaurantTo")
     public List<RestaurantTo> getRestaurantsWithDishForVote() {
         LocalDate today = DateTimeUtil.today();
-        if (DateTimeUtil.getTimeForUser()) {
-            List<Dish> dishes = dishRepository.getDishForVote(today);
-            return RestaurantUtil.transformToRestaurantTo(dishes);
-        } else
-            throw new WrongTimeException("Wrong time to show Dish for Vote");
+        //checkTimeForVotes(DateTimeUtil.getTimeForUser());
+        List<Dish> dishes = dishRepository.getDishForVote(LocalDate.of(2019,7,3));
+        return transformToRestaurantTo(dishes);
     }
 
     @Transactional
     public Vote saveUserVote(Vote vote, int user_id) {
         LocalDate today = DateTimeUtil.today();
-        if (DateTimeUtil.getTimeForUser()) {
-            Vote voteToday=voteRepository.getVoteToday(today,user_id);
-            if(voteToday==null){
-                vote.setUser(userRepository.getOne(user_id));
-                return voteRepository.save(vote);
-            }
-            else {
-                voteToday.setRestaurant_id(vote.getRestaurant_id());
-                return voteRepository.save(voteToday);
-            }
-        } else
-            throw new WrongTimeException("Wrong time for Vote");
+        checkTimeForVotes(DateTimeUtil.getTimeForUser());
+        Vote voteToday=voteRepository.getVoteToday(today,user_id);
+        if(voteToday==null){
+            vote.setUser(userRepository.getOne(user_id));
+            return voteRepository.save(vote);
+        }
+        else {
+            voteToday.setRestaurant_id(vote.getRestaurant_id());
+            return voteRepository.save(voteToday);
+        }
     }
 }

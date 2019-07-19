@@ -5,12 +5,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "dishes",uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_dish"}, name = "dishes_idx")})
 public class Dish extends AbstractBaseEntity {
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
@@ -25,16 +25,16 @@ public class Dish extends AbstractBaseEntity {
 
     @Column(name = "time_create_dish", nullable = false)
     @NotNull
-    private LocalDateTime time_create_dish;
+    private LocalDate time_create_dish;
 
     public Dish() {
     }
 
-    public Dish( String description, BigDecimal price, LocalDateTime time_create_dish) {
+    public Dish( String description, BigDecimal price, LocalDate time_create_dish) {
         this(null,description,price,time_create_dish);
     }
 
-    public Dish(Integer id, String description, BigDecimal price, LocalDateTime time_create_dish) {
+    public Dish(Integer id, String description, BigDecimal price, LocalDate time_create_dish) {
         super(id);
         this.description = description;
         this.price = price;
@@ -65,11 +65,22 @@ public class Dish extends AbstractBaseEntity {
         this.price = price;
     }
 
-    public LocalDateTime getTime_create_dish() {
+    public LocalDate getTime_create_dish() {
         return time_create_dish;
     }
 
-    public void setTime_create_dish(LocalDateTime time_create_dish) {
+    public void setTime_create_dish(LocalDate time_create_dish) {
         this.time_create_dish = time_create_dish;
+    }
+
+    @Override
+    public String toString() {
+        return "Dish{" +
+                "restaurant=" + restaurant +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", time_create_dish=" + time_create_dish +
+                ", id=" + id +
+                '}';
     }
 }

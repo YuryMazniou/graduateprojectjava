@@ -55,4 +55,14 @@ public class Vote extends AbstractBaseEntity {
     public void setTime_create_vote(LocalDateTime time_create_vote) {
         this.time_create_vote = time_create_vote;
     }
+
+    @Override
+    public String toString() {
+        return "Vote{" +
+                "user=" + user +
+                ", restaurant_id=" + restaurant_id +
+                ", time_create_vote=" + time_create_vote +
+                ", id=" + id +
+                '}';
+    }
 }
