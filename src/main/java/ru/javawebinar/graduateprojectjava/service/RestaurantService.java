@@ -11,11 +11,11 @@ import ru.javawebinar.graduateprojectjava.repository.RestaurantRepository;
 import ru.javawebinar.graduateprojectjava.repository.UserRepository;
 import ru.javawebinar.graduateprojectjava.repository.VoteRepository;
 import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
-import ru.javawebinar.graduateprojectjava.util.DateTimeUtil;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 import static ru.javawebinar.graduateprojectjava.util.RestaurantAndUsersUtil.*;
 import static ru.javawebinar.graduateprojectjava.util.ValidationUtil.*;
 
@@ -39,17 +39,17 @@ public class RestaurantService {
 
     @Cacheable("restaurantTo")
     public List<RestaurantTo> getRestaurantsWithDishForVote() {
-        LocalDate today = DateTimeUtil.today();
-        //checkTimeForVotes(DateTimeUtil.getTimeForUser());
-        List<Dish> dishes = dishRepository.getDishForVote(LocalDate.of(2019,7,3));
+        LocalDate today = today();
+        checkTimeForVotes(getTimeForUser());
+        List<Dish> dishes = dishRepository.getDishForVote(today);
         return transformToRestaurantTo(dishes);
     }
 
     @Transactional
     public Vote saveUserVote(Vote vote, int user_id) {
-        LocalDate today = DateTimeUtil.today();
-        checkTimeForVotes(DateTimeUtil.getTimeForUser());
-        Vote voteToday=voteRepository.getVoteToday(today,user_id);
+        LocalDate today = today();
+        checkTimeForVotes(getTimeForUser());
+        Vote voteToday=voteRepository.getVoteToday(user_id,today);
         if(voteToday==null){
             vote.setUser(userRepository.getOne(user_id));
             return voteRepository.save(vote);

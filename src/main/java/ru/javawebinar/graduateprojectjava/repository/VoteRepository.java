@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Repository
 @Transactional(readOnly = true)
 public interface VoteRepository extends JpaRepository<Vote,Integer> {
-
     @Query("SELECT v FROM Vote v WHERE v.user.id=:user_id AND v.time_create_vote=:today ")
-    Vote getVoteToday(@Param("today")LocalDate today,@Param("user_id") int user_id);
+    Vote getVoteToday(@Param("user_id") int user_id,@Param("today")LocalDate today);
 }

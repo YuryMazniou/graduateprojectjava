@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "dishes",uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_dish"}, name = "dishes_idx")})
 public class Dish extends AbstractBaseEntity {
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @NotNull
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;

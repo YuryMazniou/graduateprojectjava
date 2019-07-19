@@ -2,7 +2,8 @@ package ru.javawebinar.graduateprojectjava.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "votes",uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_vote"}, name = "vote_unique_idx")})
 public class Vote extends AbstractBaseEntity {
@@ -17,16 +18,14 @@ public class Vote extends AbstractBaseEntity {
 
     @Column(name = "time_create_vote", nullable = false)
     @NotNull
-    private LocalDateTime time_create_vote;
+    private LocalDate time_create_vote;
 
     public Vote() {
     }
 
-    public Vote(Integer restaurant_id, LocalDateTime time_create_vote) {
-        this(null,restaurant_id,time_create_vote);
-    }
+    public Vote(Integer restaurant_id) { this(null,restaurant_id,LocalDate.now());}
 
-    public Vote(Integer id,Integer restaurant_id,LocalDateTime time_create_vote) {
+    public Vote(Integer id, Integer restaurant_id, LocalDate time_create_vote) {
         super(id);
         this.restaurant_id=restaurant_id;
         this.time_create_vote = time_create_vote;
@@ -48,19 +47,18 @@ public class Vote extends AbstractBaseEntity {
         this.restaurant_id = restaurant_id;
     }
 
-    public LocalDateTime getTime_create_vote() {
+    public LocalDate getTime_create_vote() {
         return time_create_vote;
     }
 
-    public void setTime_create_vote(LocalDateTime time_create_vote) {
+    public void setTime_create_vote(LocalDate time_create_vote) {
         this.time_create_vote = time_create_vote;
     }
 
     @Override
     public String toString() {
         return "Vote{" +
-                "user=" + user +
-                ", restaurant_id=" + restaurant_id +
+                " restaurant_id=" + restaurant_id +
                 ", time_create_vote=" + time_create_vote +
                 ", id=" + id +
                 '}';
