@@ -15,4 +15,5 @@ import java.util.List;
 public interface DishRepository extends JpaRepository<Dish,Integer> {
     @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.time_create_dish=:today")
     List<Dish> getDishForVote(@Param("today") LocalDate today);
+    Dish saveDish(@Param(""))
 }

@@ -6,13 +6,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import ru.javawebinar.graduateprojectjava.model.Restaurant;
 import ru.javawebinar.graduateprojectjava.model.User;
 import ru.javawebinar.graduateprojectjava.repository.RestaurantRepository;
 import ru.javawebinar.graduateprojectjava.repository.UserRepository;
-import ru.javawebinar.graduateprojectjava.to.UserTo;
-import ru.javawebinar.graduateprojectjava.util.RestaurantAndUsersUtil;
-import ru.javawebinar.graduateprojectjava.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -60,11 +56,5 @@ public class UserService {
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(repository.save(user), user.getId());
-    }
-
-    public UserTo getWithRestaurants(int id)throws NotFoundException {
-        User u=checkNotFoundWithId(repository.findById(id).orElse(null), id);
-        List<Restaurant>restaurants=restaurantRepository.getRestaurantsForUser(id);
-        return RestaurantAndUsersUtil.transformationToUserTo(u,restaurants);
     }
 }

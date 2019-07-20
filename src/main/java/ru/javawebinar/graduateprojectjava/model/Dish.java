@@ -10,10 +10,15 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "dishes",uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_dish"}, name = "dishes_idx")})
 public class Dish extends AbstractBaseEntity {
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "description")
     @NotBlank
@@ -30,8 +35,8 @@ public class Dish extends AbstractBaseEntity {
     public Dish() {
     }
 
-    public Dish( String description, BigDecimal price, LocalDate time_create_dish) {
-        this(null,description,price,time_create_dish);
+    public Dish( String description, BigDecimal price) {
+        this(null,description,price,LocalDate.now());
     }
 
     public Dish(Integer id, String description, BigDecimal price, LocalDate time_create_dish) {

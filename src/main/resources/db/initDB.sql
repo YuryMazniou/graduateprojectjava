@@ -33,6 +33,7 @@ CREATE TABLE restaurants
     user_id           INTEGER      NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX restaurants_unique_name ON restaurants (description);
 
 CREATE TABLE dishes
 (
@@ -41,6 +42,7 @@ CREATE TABLE dishes
   description         VARCHAR(255) NOT NULL,
   price               DECIMAL(19,4)      NOT NULL,
   restaurant_id       INTEGER      NOT NULL,
+  user_id             INTEGER       NOT NULL ,
   FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE
 );
 CREATE INDEX dishes_idx ON dishes (restaurant_id, time_create_dish);

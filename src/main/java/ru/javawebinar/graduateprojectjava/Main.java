@@ -4,6 +4,7 @@ package ru.javawebinar.graduateprojectjava;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.graduateprojectjava.model.Vote;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
+import ru.javawebinar.graduateprojectjava.service.UserService;
 
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 
@@ -14,5 +15,6 @@ public class Main {
         RestaurantService service=context.getBean(RestaurantService.class);
         System.out.println(service.getRestaurantsWithDishForVote());
         System.out.println(service.saveUserVote(new Vote(100004),100001));
+        System.out.println(service.getUserWithHisRestaurants(100003));
     }
 }

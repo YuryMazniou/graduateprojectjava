@@ -12,7 +12,7 @@ public class Restaurant extends AbstractBaseEntity {
     @NotBlank
     private String description;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "user_id")
     private User user;

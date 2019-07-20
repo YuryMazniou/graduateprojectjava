@@ -9,7 +9,7 @@ public class ValidationUtil {
 
     private ValidationUtil() {
     }
-    public static void checkTimeForVotes(boolean check){
+    public static void checkTime(boolean check){
         if(!check)throw new WrongTimeException("Wrong time to show Dish for Vote");
     }
 
