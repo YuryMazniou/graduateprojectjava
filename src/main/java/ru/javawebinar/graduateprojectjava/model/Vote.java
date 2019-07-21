@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "votes",uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_vote"}, name = "vote_unique_idx")})
 public class Vote extends AbstractBaseEntity {
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "user_id")
     private User user;

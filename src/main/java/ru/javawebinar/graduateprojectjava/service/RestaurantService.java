@@ -11,8 +11,8 @@ import ru.javawebinar.graduateprojectjava.model.User;
 import ru.javawebinar.graduateprojectjava.model.Vote;
 import ru.javawebinar.graduateprojectjava.repository.DishRepository;
 import ru.javawebinar.graduateprojectjava.repository.RestaurantRepository;
-import ru.javawebinar.graduateprojectjava.repository.UserRepository;
 import ru.javawebinar.graduateprojectjava.repository.VoteRepository;
+import ru.javawebinar.graduateprojectjava.to.RestaurantStatInfo;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,18 +28,16 @@ public class RestaurantService {
     private RestaurantRepository restaurantRepository;
     private DishRepository dishRepository;
     private VoteRepository voteRepository;
-    private UserRepository userRepository;
 
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
     public RestaurantService(RestaurantRepository restaurantRepository, DishRepository dishRepository
-            , VoteRepository voteRepository, UserRepository userRepository) {
+            , VoteRepository voteRepository) {
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
         this.voteRepository = voteRepository;
-        this.userRepository = userRepository;
     }
 
     @Cacheable("restaurantTo")
@@ -47,6 +45,14 @@ public class RestaurantService {
         LocalDate today = today();
         checkTime(getTimeForUser());
         return dishRepository.getDishForVote(today);
+    }
+
+    @Cacheable("restaurantTo")
+    public List<RestaurantStatInfo> getTodayRestaurantStatistic() {
+        checkTime(getTimeForStatistic());
+        LocalDate today = today();
+        List<Vote>votes=voteRepository.getVotesToday(today);
+        return null;
     }
 
     @Transactional
@@ -66,15 +72,30 @@ public class RestaurantService {
     }
 ///////////////////crud Dish////////////////
     @Transactional
-    public Dish saveDishForVote(int user_id, Dish dish) {
+    public Dish createDishForVote(int user_id, Dish dish) {
         checkTime(getTimeForAdmin());
-        if(!dish.isNew())checkNotFoundWithId(dishRepository.findById(dish.getId()).orElse(null),dish.getId());
+        Assert.notNull(dish,"restaurant must not be null");
+        dish.setUser(em.getReference(User.class,user_id));
         return dishRepository.save(dish);
     }
-
-    public Dish getDish(int dish_id, int user_id) {
-
-        return null;
+    @Transactional
+    public void updateDishForVote(Dish dish,int user_id) {
+        checkTime(getTimeForAdmin());
+        Assert.notNull(dish,"restaurant must not be null");
+        LocalDate today = today();
+        Dish d=checkNotFoundWithId(dishRepository.getDish(dish.getId(),user_id,today),dish.getId());
+        d.setDescription(dish.getDescription());
+        dishRepository.save(d);
+    }
+    @Transactional
+    public void deleteDishForVote(int dish_id,int userId) {
+        checkTime(getTimeForAdmin());
+        LocalDate today = today();
+        checkNotFoundWithId(dishRepository.delete(dish_id, userId,today)!=0, dish_id);
+    }
+    public List<Dish> getDishes(int restaurant_id, int user_id) {
+        LocalDate today = today();
+        return checkNotFoundWithId(dishRepository.getDishes(restaurant_id, user_id,today), restaurant_id);
     }
 
 //////////////////crud Restaurant///////////////

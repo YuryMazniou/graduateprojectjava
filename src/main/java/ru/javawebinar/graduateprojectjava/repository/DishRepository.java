@@ -1,6 +1,7 @@
 package ru.javawebinar.graduateprojectjava.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -15,5 +16,14 @@ import java.util.List;
 public interface DishRepository extends JpaRepository<Dish,Integer> {
     @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.time_create_dish=:today")
     List<Dish> getDishForVote(@Param("today") LocalDate today);
-    Dish saveDish(@Param(""))
+
+    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant,d.user WHERE d.id=:dish_id AND d.user.id=:user_id AND d.time_create_dish=:today")
+    Dish getDish(@Param("dish_id")int dish_id,@Param("user_id")int user_id,@Param("today")LocalDate today);
+
+    @Modifying
+    @Query("DELETE FROM Dish d WHERE d.id=:id AND d.user.id=:userId AND d.time_create_dish=:today")
+    int delete(@Param("id") int id, @Param("userId") int userId,@Param("today")LocalDate today);
+
+    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.restaurant.id=:restaurant_id AND d.user.id=:user_id AND d.time_create_dish=:today")
+    List<Dish> getDishes(@Param("restaurant_id")int restaurant_id,@Param("user_id")int user_id,@Param("today")LocalDate today);
 }

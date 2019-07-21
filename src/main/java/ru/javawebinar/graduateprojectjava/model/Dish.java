@@ -45,6 +45,13 @@ public class Dish extends AbstractBaseEntity {
         this.price = price;
         this.time_create_dish = time_create_dish;
     }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Restaurant getRestaurant() {
         return restaurant;

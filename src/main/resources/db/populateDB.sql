@@ -21,13 +21,13 @@ INSERT INTO restaurants (description,user_id) VALUES
    ('Garage',100002),
    ('PizzaMania',100003);
 
-INSERT INTO dishes  (time_create_dish,description,price,restaurant_id) VALUES
-('2019-07-03','stake','5.50',100004),
-('2019-07-03','vegetables','4.5',100004),
-('2019-07-03','wine','9.51',100004),
-('2019-07-03','chicken','5.15',100005),
-('2019-07-03','fruit','4.15',100005),
-('2019-07-03','milk','2.15',100005);
+INSERT INTO dishes  (time_create_dish,description,price,restaurant_id,user_id) VALUES
+('2019-07-03','stake','5.50',100004,100002),
+('2019-07-03','vegetables','4.5',100004,100002),
+('2019-07-03','wine','9.51',100004,100002),
+('2019-07-03','chicken','5.15',100005,100003),
+('2019-07-03','fruit','4.15',100005,100003),
+('2019-07-03','milk','2.15',100005,100003);
 
 
 INSERT INTO votes  (user_id,restaurant_id,time_create_vote) VALUES

@@ -8,10 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.graduateprojectjava.model.Vote;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
 public interface VoteRepository extends JpaRepository<Vote,Integer> {
-    @Query("SELECT v FROM Vote v WHERE v.user.id=:user_id AND v.time_create_vote=:today ")
+    @Query("SELECT v FROM Vote v JOIN FETCH v.user WHERE v.user.id=:user_id AND v.time_create_vote=:today ")
     Vote getVoteToday(@Param("user_id") int user_id,@Param("today")LocalDate today);
+
+    @Query("SELECT v FROM Vote v WHERE v.time_create_vote=:today ")
+    List<Vote> getVotesToday(@Param("today")LocalDate today);
 }

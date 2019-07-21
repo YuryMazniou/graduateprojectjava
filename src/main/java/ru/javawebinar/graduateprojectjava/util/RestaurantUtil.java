@@ -7,7 +7,7 @@ import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RestaurantAndUsersUtil {
+public class RestaurantUtil {
 
     public static List<RestaurantTo> transformToRestaurantTo(List<Dish>dishes){
         Map<Integer,RestaurantTo>map=new HashMap<>();
