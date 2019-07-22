@@ -7,7 +7,7 @@ import ru.javawebinar.graduateprojectjava.model.Dish;
 import ru.javawebinar.graduateprojectjava.model.Restaurant;
 import ru.javawebinar.graduateprojectjava.model.Vote;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
-import ru.javawebinar.graduateprojectjava.to.RestaurantStatInfo;
+import ru.javawebinar.graduateprojectjava.to.TodayTo;
 import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
 import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
 
@@ -33,7 +33,7 @@ public class RestaurantController {
         return transformToRestaurantTo(dishes);
     }
 
-    public List<RestaurantStatInfo> getTodayRestaurantStatistic(){
+    public List<TodayTo> getTodayRestaurantStatistic(){
         log.info("get today restaurant statistic");
         return restaurantService.getTodayRestaurantStatistic();
     }

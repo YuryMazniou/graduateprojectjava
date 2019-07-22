@@ -12,7 +12,8 @@ import ru.javawebinar.graduateprojectjava.model.Vote;
 import ru.javawebinar.graduateprojectjava.repository.DishRepository;
 import ru.javawebinar.graduateprojectjava.repository.RestaurantRepository;
 import ru.javawebinar.graduateprojectjava.repository.VoteRepository;
-import ru.javawebinar.graduateprojectjava.to.RestaurantStatInfo;
+import ru.javawebinar.graduateprojectjava.to.TodayTo;
+import ru.javawebinar.graduateprojectjava.util.RestaurantUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -47,12 +48,13 @@ public class RestaurantService {
         return dishRepository.getDishForVote(today);
     }
 
-    @Cacheable("restaurantTo")
-    public List<RestaurantStatInfo> getTodayRestaurantStatistic() {
+    @Cacheable("todayTo")
+    public List<TodayTo> getTodayRestaurantStatistic() {
         checkTime(getTimeForStatistic());
         LocalDate today = today();
         List<Vote>votes=voteRepository.getVotesToday(today);
-        return null;
+        List<Restaurant>restaurants=restaurantRepository.findAll();
+        return RestaurantUtil.transformToTodayTo(votes,restaurants);
     }
 
     @Transactional
