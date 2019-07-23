@@ -1,13 +1,14 @@
-DELETE FROM user_roles;
-DELETE FROM users;
+DELETE FROM USER_ROLES;
+DELETE FROM USERS;
 DELETE FROM RESTAURANTS;
 DELETE FROM DISHES;
 DELETE FROM VOTES;
+DELETE FROM HISTORY_RESTAURANT_OBJECT;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password) VALUES
-  ('User1', 'user1@yandex.ru', 'password'),
-  ('User2', 'user2@yandex.ru', 'password'),
+  ('User1', 'user1@yandex.ru', 'password1'),
+  ('User2', 'user2@yandex.ru', 'password2'),
   ('Admin1', 'admin1@gmail.com', 'admin1'),
   ('Admin2', 'admin2@gmail.com', 'admin2');
 
@@ -31,4 +32,10 @@ INSERT INTO dishes  (time_create_dish,description,price,restaurant_id,user_id) V
 
 
 INSERT INTO votes  (user_id,restaurant_id,time_create_vote) VALUES
-     (100000,100004,'2019-07-03')
+     (100000,100004,'2019-07-03');
+
+INSERT INTO history_restaurant_object (counts,description,votes_date) VALUES
+(12345,'Garage','2019-07-02'),
+(123456,'PizzaMania','2019-07-02'),
+(1234,'Garage','2019-07-01'),
+(123,'PizzaMania','2019-07-01')

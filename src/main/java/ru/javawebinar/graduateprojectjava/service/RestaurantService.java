@@ -5,15 +5,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import ru.javawebinar.graduateprojectjava.model.Dish;
-import ru.javawebinar.graduateprojectjava.model.Restaurant;
-import ru.javawebinar.graduateprojectjava.model.User;
-import ru.javawebinar.graduateprojectjava.model.Vote;
+import ru.javawebinar.graduateprojectjava.model.*;
 import ru.javawebinar.graduateprojectjava.repository.DishRepository;
+import ru.javawebinar.graduateprojectjava.repository.HistoryRestaurantRepository;
 import ru.javawebinar.graduateprojectjava.repository.RestaurantRepository;
 import ru.javawebinar.graduateprojectjava.repository.VoteRepository;
+import ru.javawebinar.graduateprojectjava.to.AllTimeTo;
+import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
 import ru.javawebinar.graduateprojectjava.to.TodayTo;
-import ru.javawebinar.graduateprojectjava.util.RestaurantUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
+import static ru.javawebinar.graduateprojectjava.util.RestaurantUtil.*;
 import static ru.javawebinar.graduateprojectjava.util.ValidationUtil.*;
 
 @Service
@@ -29,34 +29,62 @@ public class RestaurantService {
     private RestaurantRepository restaurantRepository;
     private DishRepository dishRepository;
     private VoteRepository voteRepository;
+    private HistoryRestaurantRepository historyRestaurantRepository;
 
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
     public RestaurantService(RestaurantRepository restaurantRepository, DishRepository dishRepository
-            , VoteRepository voteRepository) {
+            , VoteRepository voteRepository,HistoryRestaurantRepository historyRestaurantRepository) {
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
         this.voteRepository = voteRepository;
+        this.historyRestaurantRepository=historyRestaurantRepository;
     }
 
     @Cacheable("restaurantTo")
-    public List<Dish> getRestaurantsWithDishForVote() {
+    public List<RestaurantTo> getRestaurantsWithDishForVote() {
         LocalDate today = today();
         checkTime(getTimeForUser());
-        return dishRepository.getDishForVote(today);
+        List<Dish>dishes=dishRepository.getDishForVote(today);
+        return transformToRestaurantTo(dishes);
     }
 
     @Cacheable("todayTo")
-    public List<TodayTo> getTodayRestaurantStatistic() {
+    @Transactional
+    public List<TodayTo> getTodayRestaurantsStatistic() {
         checkTime(getTimeForStatistic());
         LocalDate today = today();
         List<Vote>votes=voteRepository.getVotesToday(today);
         List<Restaurant>restaurants=restaurantRepository.findAll();
-        return RestaurantUtil.transformToTodayTo(votes,restaurants);
+        List<TodayTo>statistic=transformToTodayTo(votes,restaurants);
+        if(checkTimeForSaveStatistic())saveStatistic(statistic);
+        return statistic;
     }
 
+    private void saveStatistic(List<TodayTo>statistic){
+        for (TodayTo t:statistic) {
+            HistoryRestaurantObject obj=new HistoryRestaurantObject(t.getCount()==null?0:t.getCount(),t.getDescription());
+            historyRestaurantRepository.save(obj);
+        }
+    }
+    @Transactional
+    public List<AllTimeTo> getAllTimeRestaurantStatistic() {
+        boolean flag=getTimeForStatistic();
+        if(flag&&checkTimeForSaveStatistic()){
+            LocalDate today = today();
+            List<Vote>votes=voteRepository.getVotesToday(today);
+            List<Restaurant>restaurants=restaurantRepository.findAll();
+            List<TodayTo>statistic=transformToTodayTo(votes,restaurants);
+            saveStatistic(statistic);
+            return transformToAllTimeTo(historyRestaurantRepository.findAll());
+        }
+        else {
+            return transformToAllTimeTo(historyRestaurantRepository.findAll());
+        }
+    }
+    ///////////////////crud Vote////////////////
     @Transactional
     public Vote saveUserVote(int restaurant_id, int user_id) {
         LocalDate today = today();
@@ -72,9 +100,19 @@ public class RestaurantService {
             return voteRepository.save(voteToday);
         }
     }
+    @Transactional
+    public void deleteVote(int vote_id, int user_id) {
+        LocalDate today = today();
+        checkTime(getTimeForUser());
+        checkNotFoundWithId(voteRepository.deleteVote(vote_id,user_id,today),vote_id);
+    }
+    public Vote getVoteToday(int user_id) {
+        LocalDate today = today();
+        return checkNotFoundWithId(voteRepository.getVoteToday(user_id,today),user_id);
+    }
 ///////////////////crud Dish////////////////
     @Transactional
-    public Dish createDishForVote(int user_id, Dish dish) {
+    public Dish createDishForVote(Dish dish,int user_id) {
         checkTime(getTimeForAdmin());
         Assert.notNull(dish,"restaurant must not be null");
         dish.setUser(em.getReference(User.class,user_id));
@@ -103,12 +141,14 @@ public class RestaurantService {
 //////////////////crud Restaurant///////////////
     @Transactional
     public Restaurant saveRestaurant(Restaurant restaurant, int user_id) {
+        checkTime(getTimeForAdmin());
         Assert.notNull(restaurant,"restaurant must not be null");
         restaurant.setUser(em.getReference(User.class,user_id));
         return restaurantRepository.save(restaurant);
     }
     @Transactional
     public void updateRestaurant(Restaurant restaurant, int user_id) {
+        checkTime(getTimeForAdmin());
         Assert.notNull(restaurant,"restaurant must not be null");
         Restaurant r=checkNotFoundWithId(restaurantRepository.getRestaurant(restaurant.getId(),user_id),restaurant.getId());
         r.setDescription(restaurant.getDescription());
@@ -116,9 +156,10 @@ public class RestaurantService {
     }
     @Transactional
     public void deleteRestaurant(int restaurant_id, int user_id) {
+        checkTime(getTimeForAdmin());
         checkNotFoundWithId(restaurantRepository.delete(restaurant_id, user_id)!=0, restaurant_id);
     }
-    public List<Restaurant> getRestaurantsForUser(int id){
-        return restaurantRepository.getRestaurantsForUser(id);
+    public List<Restaurant> getRestaurantsForUser(int user_id){
+        return restaurantRepository.getRestaurantsForUser(user_id);
     }
 }

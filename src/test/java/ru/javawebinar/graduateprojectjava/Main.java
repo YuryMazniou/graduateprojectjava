@@ -14,7 +14,5 @@ public class Main {
         ClassPathXmlApplicationContext context=new ClassPathXmlApplicationContext("spring/spring-app.xml","spring/spring-db.xml");
         RestaurantService service=context.getBean(RestaurantService.class);
         System.out.println(service.getRestaurantsWithDishForVote());
-        System.out.println(service.saveUserVote(new Vote(100004),100001));
-        System.out.println(service.getUserWithHisRestaurants(100003));
     }
 }

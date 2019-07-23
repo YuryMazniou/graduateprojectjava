@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurants")
+@Table(name = "restaurants",uniqueConstraints = {@UniqueConstraint(columnNames = {"description"}, name = "restaurants_unique_name")})
 public class Restaurant extends AbstractBaseEntity {
     @Column(name = "description")
     @NotBlank

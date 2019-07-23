@@ -18,4 +18,7 @@ public interface VoteRepository extends JpaRepository<Vote,Integer> {
 
     @Query("SELECT v FROM Vote v WHERE v.time_create_vote=:today ")
     List<Vote> getVotesToday(@Param("today")LocalDate today);
+
+    @Query("DELETE FROM Vote v WHERE v.id=:vote_id AND v.user.id=:user_id AND v.time_create_vote=:today")
+    boolean deleteVote(@Param("vote_id")int vote_id,@Param("user_id") int user_id, @Param("today")LocalDate today);
 }

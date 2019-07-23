@@ -9,7 +9,14 @@ public class DateTimeUtil {
     private static final LocalTime TIME_1101 =LocalTime.of(11,1);
     private static final LocalTime TIME_2359 =LocalTime.of(23,59);
     private static boolean flagTest=false;
+    private static LocalDate localDate;
 
+    public static synchronized boolean checkTimeForSaveStatistic(){
+        LocalDate now=LocalDate.now();
+        if(localDate.equals(now))return false;
+        localDate=now;
+        return true;
+    }
     public static boolean getTimeForUser(){
         LocalTime now=LocalTime.now();
         if(!isFlagTest())

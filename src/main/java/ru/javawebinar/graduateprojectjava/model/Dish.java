@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dishes",uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_dish"}, name = "dishes_idx")})
+@Table(name = "dishes"/*,uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_dish"}, name = "dishes_idx")}*/)
 public class Dish extends AbstractBaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @NotNull
