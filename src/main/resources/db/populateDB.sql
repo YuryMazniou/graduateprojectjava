@@ -34,7 +34,9 @@ INSERT INTO dishes  (time_create_dish,description,price,restaurant_id,user_id) V
 
 
 INSERT INTO votes  (user_id,restaurant_id,time_create_vote) VALUES
-     (100000,100004,'2019-07-03');
+     (100000,100004,'2019-07-03'),
+     (100002,100004,'2019-07-03'),
+     (100001,100005,'2019-07-03');
 
 INSERT INTO history_restaurant_object (counts,description,votes_date) VALUES
 (12345,'Garage','2019-07-02'),

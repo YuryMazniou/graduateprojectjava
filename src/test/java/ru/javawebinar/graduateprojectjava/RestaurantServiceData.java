@@ -2,6 +2,7 @@ package ru.javawebinar.graduateprojectjava;
 
 import ru.javawebinar.graduateprojectjava.model.Dish;
 import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
+import ru.javawebinar.graduateprojectjava.to.TodayTo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,13 +19,19 @@ public class RestaurantServiceData {
     public static final Dish DISH6=new Dish(100011,"milk",new BigDecimal("2.1500"),LocalDate.of(2019,7,3));
     public static final List<Dish>DISH_LIST1=List.of(DISH1,DISH2,DISH3);
     public static final List<Dish>DISH_LIST2=List.of(DISH4,DISH5,DISH6);
-    public static final RestaurantTo RESTAURANT1=new RestaurantTo(100004,"Garage", DISH_LIST1);
-    public static final RestaurantTo RESTAURANT2=new RestaurantTo(100005,"PizzaMania", DISH_LIST2);
+    public static final RestaurantTo RESTAURANT_TO_1 =new RestaurantTo(100004,"Garage", DISH_LIST1);
+    public static final RestaurantTo RESTAURANT_TO_2 =new RestaurantTo(100005,"PizzaMania", DISH_LIST2);
+    public static final TodayTo TODAY_TO_1=new TodayTo(2,"Garage",true);
+    public static final TodayTo TODAY_TO_2=new TodayTo(1,"PizzaMania",false);
+    public static final List<TodayTo>TODAY_TO_LIST=List.of(TODAY_TO_1,TODAY_TO_2);
 
     public static void assertMatchR(Iterable<RestaurantTo> actual, Iterable<RestaurantTo> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields("list_of_dish").isEqualTo(expected);
     }
-    public static void assertMatchD(Iterable<Dish> actual, Iterable<Dish> expected) {
+    public static void assertMatchD(List<Dish> actual, List<Dish> expected) {
+        assertThat(actual).usingElementComparatorIgnoringFields("user","restaurant").isEqualTo(expected);
+    }
+    public static <T> void assertMatchD(Iterable<T> actual, Iterable<T> expected) {
         assertThat(actual).isEqualTo(expected);
     }
 }

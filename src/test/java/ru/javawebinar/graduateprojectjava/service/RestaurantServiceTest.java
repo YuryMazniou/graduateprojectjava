@@ -7,6 +7,8 @@ import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
 import ru.javawebinar.graduateprojectjava.to.TodayTo;
 import ru.javawebinar.graduateprojectjava.util.JpaUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
@@ -27,8 +29,9 @@ public class RestaurantServiceTest extends AbstractServiceTest {
     @Test
     public void getRestaurantsWithDishForVote() {
         testOn();
+        setLocalDate(LocalDate.of(2019,7,3));
         List<RestaurantTo>list=service.getRestaurantsWithDishForVote();
-        assertMatchR(list,List.of(RESTAURANT1,RESTAURANT2));
+        assertMatchR(list,List.of(RESTAURANT_TO_1, RESTAURANT_TO_2));
         assertMatchD(list.get(0).getList_of_dish(),DISH_LIST1);
         assertMatchD(list.get(1).getList_of_dish(),DISH_LIST2);
     }
@@ -36,8 +39,10 @@ public class RestaurantServiceTest extends AbstractServiceTest {
     @Test
     public void getTodayRestaurantsStatistic() {
         testOn();
+        setLocalTime(LocalTime.of(12,0));
+        setLocalDate(LocalDate.of(2019,7,3));
         List<TodayTo>list=service.getTodayRestaurantsStatistic();
-
+        assertMatchD(list,TODAY_TO_LIST);
     }
 
     @Test
