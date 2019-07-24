@@ -19,12 +19,10 @@ import static ru.javawebinar.graduateprojectjava.util.ValidationUtil.checkNotFou
 public class UserService {
     private static final Sort SORT_NAME_EMAIL = new Sort(Sort.Direction.ASC, "name", "email");
     private final UserRepository repository;
-    private final RestaurantRepository restaurantRepository;
 
     @Autowired
     public UserService(UserRepository repository,RestaurantRepository restaurantRepository) {
         this.repository = repository;
-        this.restaurantRepository=restaurantRepository;
     }
 
     @CacheEvict(value = "users", allEntries = true)
@@ -34,9 +32,7 @@ public class UserService {
     }
 
     @CacheEvict(value = "users", allEntries = true)
-    public void delete(int id) {
-        checkNotFoundWithId(repository.delete(id), id);
-    }
+    public void delete(int id) { checkNotFoundWithId(repository.delete(id)!=0, id);}
 
     public User get(int id) {
         return checkNotFoundWithId(repository.findById(id).orElse(null), id);

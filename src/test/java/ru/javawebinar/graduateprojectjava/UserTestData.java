@@ -9,11 +9,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.graduateprojectjava.model.AbstractBaseEntity.START_SEQ;
 
 public class UserTestData {
-    public static final int USER_ID = START_SEQ;
-    public static final int ADMIN_ID = START_SEQ + 1;
+    public static final int USER_ID1 = START_SEQ;
+    public static final int USER_ID2 = START_SEQ+1;
+    public static final int ADMIN_ID1 = START_SEQ + 2;
+    public static final int ADMIN_ID2 = START_SEQ + 3;
 
-    public static final User USER = new User(USER_ID, "User", "user@yandex.ru", "password", Role.ROLE_USER);
-    public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ROLE_ADMIN,Role.ROLE_USER);
+    public static final User USER1 = new User(USER_ID1, "User1", "user1@yandex.ru", "password1", Role.ROLE_USER);
+    public static final User USER2 = new User(USER_ID2, "User2", "user2@yandex.ru", "password2", Role.ROLE_USER);
+    public static final User ADMIN1 = new User(ADMIN_ID1, "Admin1", "admin1@gmail.com", "admin1", Role.ROLE_ADMIN,Role.ROLE_USER);
+    public static final User ADMIN2= new User(ADMIN_ID2, "Admin2", "admin2@gmail.com", "admin2", Role.ROLE_ADMIN,Role.ROLE_USER);
 
     public static void assertMatch(User actual, User expected) {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered");

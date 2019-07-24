@@ -61,9 +61,9 @@ public class Restaurant extends AbstractBaseEntity {
     @Override
     public String toString() {
         return "Restaurant{" +
-                "description='" + description + '\'' +
+                " id=" + id +
+                ", description='" + description + '\'' +
                 ", user=" + user +
-                ", id=" + id +
                 '}';
     }
 }

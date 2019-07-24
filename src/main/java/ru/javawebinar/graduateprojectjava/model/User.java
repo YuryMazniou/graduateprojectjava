@@ -1,7 +1,6 @@
 package ru.javawebinar.graduateprojectjava.model;
 
 import org.springframework.util.CollectionUtils;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -15,9 +14,9 @@ import java.util.Set;
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
 public class User extends AbstractBaseEntity{
+    @Column(name = "name", nullable = false)
     @NotBlank
     @Size(min = 2, max = 100)
-    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -108,6 +107,7 @@ public class User extends AbstractBaseEntity{
     public Set<Role> getRoles() {
         return roles;
     }
+
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }

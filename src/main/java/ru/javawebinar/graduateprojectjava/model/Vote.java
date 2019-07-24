@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "votes"/*,uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_vote"}, name = "vote_unique_idx")}*/)
+@Table(name = "votes")
 public class Vote extends AbstractBaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @NotNull
@@ -58,9 +58,9 @@ public class Vote extends AbstractBaseEntity {
     @Override
     public String toString() {
         return "Vote{" +
-                " restaurant_id=" + restaurant_id +
+                " id=" + id +
+                ", restaurant_id=" + restaurant_id +
                 ", time_create_vote=" + time_create_vote +
-                ", id=" + id +
                 '}';
     }
 }

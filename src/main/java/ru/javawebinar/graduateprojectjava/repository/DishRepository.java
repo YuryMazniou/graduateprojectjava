@@ -17,7 +17,7 @@ public interface DishRepository extends JpaRepository<Dish,Integer> {
     @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.time_create_dish=:today")
     List<Dish> getDishForVote(@Param("today") LocalDate today);
 
-    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant,d.user WHERE d.id=:dish_id AND d.user.id=:user_id AND d.time_create_dish=:today")
+    @Query("SELECT d FROM Dish d JOIN FETCH d.user WHERE d.id=:dish_id AND d.user.id=:user_id AND d.time_create_dish=:today")
     Dish getDish(@Param("dish_id")int dish_id,@Param("user_id")int user_id,@Param("today")LocalDate today);
 
     @Modifying

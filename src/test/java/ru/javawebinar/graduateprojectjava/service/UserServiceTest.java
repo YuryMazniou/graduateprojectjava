@@ -35,18 +35,18 @@ public class UserServiceTest extends AbstractServiceTest {
         User created = service.create(newUser);
         newUser.setId(created.getId());
         assertMatch(created, newUser);
-        assertMatch(service.getAll(), ADMIN, newUser, USER);
+        assertMatch(service.getAll(), ADMIN1,ADMIN2, newUser, USER1,USER2);
     }
 
     @Test(expected = DataAccessException.class)
     public void duplicateMailCreate() throws Exception {
-        service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", Role.ROLE_USER));
+        service.create(new User(null, "Duplicate", "user1@yandex.ru", "newPass", Role.ROLE_USER));
     }
 
     @Test
     public void delete() throws Exception {
-        service.delete(ADMIN_ID);
-        assertMatch(service.getAll(), USER);
+        service.delete(ADMIN_ID1);
+        assertMatch(service.getAll(), ADMIN2,USER1,USER2);
     }
 
     @Test(expected = NotFoundException.class)
@@ -56,8 +56,8 @@ public class UserServiceTest extends AbstractServiceTest {
 
     @Test
     public void get() throws Exception {
-        User user = service.get(USER_ID);
-        assertMatch(user, USER);
+        User user = service.get(USER_ID1);
+        assertMatch(user, USER1);
     }
 
     @Test(expected = NotFoundException.class)
@@ -67,31 +67,31 @@ public class UserServiceTest extends AbstractServiceTest {
 
     @Test
     public void getByEmail() throws Exception {
-        User user = service.getByEmail("user@yandex.ru");
-        assertMatch(user, USER);
+        User user = service.getByEmail("user1@yandex.ru");
+        assertMatch(user, USER1);
     }
 
     @Test
     public void update() throws Exception {
-        User updated = new User(USER);
+        User updated = new User(USER1);
         updated.setName("UpdatedName");
         updated.getRoles().add(Role.ROLE_ADMIN);
         service.update(updated);
-        assertMatch(service.get(USER_ID), updated);
+        assertMatch(service.get(USER_ID1), updated);
     }
 
     @Test
     public void updateRoles() throws Exception{
-        User updated = new User(ADMIN);
+        User updated = new User(ADMIN1);
         updated.getRoles().remove(Role.ROLE_USER);
         service.update(updated);
-        assertMatch(service.get(ADMIN_ID), updated);
+        assertMatch(service.get(ADMIN_ID1), updated);
     }
 
     @Test
     public void getAll() throws Exception {
         List<User> all = service.getAll();
-        assertMatch(all, ADMIN, USER);
+        assertMatch(all, ADMIN1,ADMIN2, USER1,USER2);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class UserServiceTest extends AbstractServiceTest {
         validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "password",  true, new Date(), Collections.emptySet())), ConstraintViolationException.class);
-        validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "password",  true, new Date(), Collections.emptySet())), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new User(null, "u", "mail@yandex.ru", "password",  true, new Date(), Collections.emptySet())), ConstraintViolationException.class);
+        validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "p",  true, new Date(), Collections.emptySet())), ConstraintViolationException.class);
     }
 }

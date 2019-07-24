@@ -2,9 +2,7 @@ package ru.javawebinar.graduateprojectjava;
 
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.javawebinar.graduateprojectjava.model.Vote;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
-import ru.javawebinar.graduateprojectjava.service.UserService;
 
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 

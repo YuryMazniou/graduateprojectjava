@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "dishes"/*,uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id","time_create_dish"}, name = "dishes_idx")}*/)
+@Table(name = "dishes")
 public class Dish extends AbstractBaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @NotNull
@@ -88,11 +88,10 @@ public class Dish extends AbstractBaseEntity {
     @Override
     public String toString() {
         return "Dish{" +
-                "restaurant=" + restaurant +
+                " id=" + id +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", time_create_dish=" + time_create_dish +
-                ", id=" + id +
                 '}';
     }
 }
