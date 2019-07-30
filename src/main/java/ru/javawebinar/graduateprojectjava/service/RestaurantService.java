@@ -1,6 +1,7 @@
 package ru.javawebinar.graduateprojectjava.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,6 +87,7 @@ public class RestaurantService {
     }
     ///////////////////crud Vote////////////////
     @Transactional
+    @CacheEvict(value = "todayTo", allEntries = true)
     public Vote saveUserVote(int restaurant_id, int user_id) {
         LocalDate today = today();
         checkTime(getTimeForUser());
@@ -101,6 +103,7 @@ public class RestaurantService {
         }
     }
     @Transactional
+    @CacheEvict(value = "todayTo", allEntries = true)
     public void deleteVote(int vote_id, int user_id) {
         LocalDate today = today();
         checkTime(getTimeForUser());
@@ -112,6 +115,7 @@ public class RestaurantService {
     }
 ///////////////////crud Dish////////////////
     @Transactional
+    @CacheEvict(value = "restaurantTo", allEntries = true)
     public Dish createDishForVote(Dish dish,int user_id) {
         checkTime(getTimeForAdmin());
         Assert.notNull(dish,"restaurant must not be null");
@@ -119,6 +123,7 @@ public class RestaurantService {
         return dishRepository.save(dish);
     }
     @Transactional
+    @CacheEvict(value = "restaurantTo", allEntries = true)
     public void updateDishForVote(Dish dish,int user_id) {
         checkTime(getTimeForAdmin());
         Assert.notNull(dish,"restaurant must not be null");
@@ -128,6 +133,7 @@ public class RestaurantService {
         dishRepository.save(d);
     }
     @Transactional
+    @CacheEvict(value = "restaurantTo", allEntries = true)
     public void deleteDishForVote(int dish_id,int userId) {
         checkTime(getTimeForAdmin());
         LocalDate today = today();
@@ -140,6 +146,7 @@ public class RestaurantService {
 
 //////////////////crud Restaurant///////////////
     @Transactional
+    @CacheEvict(value = "todayTo", allEntries = true)
     public Restaurant saveRestaurant(Restaurant restaurant, int user_id) {
         checkTime(getTimeForAdmin());
         Assert.notNull(restaurant,"restaurant must not be null");
@@ -147,6 +154,7 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
     @Transactional
+    @CacheEvict(value = "todayTo", allEntries = true)
     public void updateRestaurant(Restaurant restaurant, int user_id) {
         checkTime(getTimeForAdmin());
         Assert.notNull(restaurant,"restaurant must not be null");
@@ -155,6 +163,7 @@ public class RestaurantService {
         restaurantRepository.save(r);
     }
     @Transactional
+    @CacheEvict(value = "todayTo", allEntries = true)
     public void deleteRestaurant(int restaurant_id, int user_id) {
         checkTime(getTimeForAdmin());
         checkNotFoundWithId(restaurantRepository.delete(restaurant_id, user_id)!=0, restaurant_id);

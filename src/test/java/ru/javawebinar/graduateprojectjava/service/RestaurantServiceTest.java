@@ -1,33 +1,27 @@
 package ru.javawebinar.graduateprojectjava.service;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
 import ru.javawebinar.graduateprojectjava.to.TodayTo;
-import ru.javawebinar.graduateprojectjava.util.JpaUtil;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 
-public class RestaurantServiceTest extends AbstractServiceTest {
+class RestaurantServiceTest extends AbstractServiceTest {
     @Autowired
-    protected RestaurantService service;
+    private RestaurantService service;
 
-    @Autowired
-    protected JpaUtil jpaUtil;
-
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         cacheManager.getCache("users").clear();
         jpaUtil.clear2ndLevelHibernateCache();
     }
     @Test
-    public void getRestaurantsWithDishForVote() {
+    void getRestaurantsWithDishForVote() {
         testOn();
         setLocalDate(LocalDate.of(2019,7,3));
         List<RestaurantTo>list=service.getRestaurantsWithDishForVote();
@@ -37,7 +31,7 @@ public class RestaurantServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void getTodayRestaurantsStatistic() {
+    void getTodayRestaurantsStatistic() {
         testOn();
         setLocalTime(LocalTime.of(12,0));
         setLocalDate(LocalDate.of(2019,7,3));
@@ -46,50 +40,51 @@ public class RestaurantServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void getAllTimeRestaurantStatistic() {
+    void getAllTimeRestaurantStatistic() {
+
     }
 
     @Test
-    public void saveUserVote() {
+    void saveUserVote() {
     }
 
     @Test
-    public void deleteVote() {
+    void deleteVote() {
     }
 
     @Test
-    public void getVoteToday() {
+    void getVoteToday() {
     }
 
     @Test
-    public void createDishForVote() {
+    void createDishForVote() {
     }
 
     @Test
-    public void updateDishForVote() {
+    void updateDishForVote() {
     }
 
     @Test
-    public void deleteDishForVote() {
+    void deleteDishForVote() {
     }
 
     @Test
-    public void getDishes() {
+    void getDishes() {
     }
 
     @Test
-    public void saveRestaurant() {
+    void saveRestaurant() {
     }
 
     @Test
-    public void updateRestaurant() {
+    void updateRestaurant() {
     }
 
     @Test
-    public void deleteRestaurant() {
+    void deleteRestaurant() {
     }
 
     @Test
-    public void getRestaurantsForUser() {
+    void getRestaurantsForUser() {
     }
 }
