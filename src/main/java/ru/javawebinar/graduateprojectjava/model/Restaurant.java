@@ -17,8 +17,7 @@ public class Restaurant extends AbstractBaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @OrderBy("time_create_dish desc")
     private List<Dish> dishes;
 

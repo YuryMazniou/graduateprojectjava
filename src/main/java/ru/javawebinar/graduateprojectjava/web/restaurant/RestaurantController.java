@@ -54,22 +54,22 @@ public class RestaurantController {
         return restaurantService.getVoteToday(user_id);
     }
     ///////////////////crud Dish////////////////
-    public Dish createDishForVote(Dish dish){
+    public Dish createDishForVote(Dish dish,int restaurant_id){
         int user_id= SecurityUtil.authUserId();
         checkNew(dish);
         log.info("save dish {}",user_id);
-        return restaurantService.createDishForVote(dish,user_id);
+        return restaurantService.saveDishForVote(dish,restaurant_id,user_id);
     }
     public void deleteDishForVote(int dish_id){
         int user_id= SecurityUtil.authUserId();
         log.info("delete dish  {}",user_id);
         restaurantService.deleteDishForVote(dish_id,user_id);
     }
-    public void updateDishForVote(Dish dish,int id){
+    public void updateDishForVote(Dish dish,int restaurant_id,int id){
         int user_id= SecurityUtil.authUserId();
         assureIdConsistent(dish,id);
         log.info("update dish  {}",user_id);
-        restaurantService.updateDishForVote(dish,user_id);
+        restaurantService.saveDishForVote(dish,restaurant_id,user_id);
     }
     public List<Dish> getDishes(int restaurant_id){
         int user_id= SecurityUtil.authUserId();
@@ -92,7 +92,7 @@ public class RestaurantController {
         int user_id= SecurityUtil.authUserId();
         assureIdConsistent(restaurant,id);
         log.info("update restaurant  {}",user_id);
-        restaurantService.updateRestaurant(restaurant,user_id);
+        restaurantService.saveRestaurant(restaurant,user_id);
     }
 
     public List<Restaurant> getRestaurantsForUser(){

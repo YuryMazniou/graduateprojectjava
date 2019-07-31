@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 import static ru.javawebinar.graduateprojectjava.util.RestaurantUtil.*;
@@ -107,7 +108,7 @@ public class RestaurantService {
     public void deleteVote(int vote_id, int user_id) {
         LocalDate today = today();
         checkTime(getTimeForUser());
-        checkNotFoundWithId(voteRepository.deleteVote(vote_id,user_id,today),vote_id);
+        checkNotFoundWithId(voteRepository.delete(vote_id,user_id,today)!=0,vote_id);
     }
     public Vote getVoteToday(int user_id) {
         LocalDate today = today();
@@ -116,22 +117,20 @@ public class RestaurantService {
 ///////////////////crud Dish////////////////
     @Transactional
     @CacheEvict(value = "restaurantTo", allEntries = true)
-    public Dish createDishForVote(Dish dish,int user_id) {
+    public Dish saveDishForVote(Dish dish,int restaurant_id,int user_id) {
         checkTime(getTimeForAdmin());
         Assert.notNull(dish,"restaurant must not be null");
         dish.setUser(em.getReference(User.class,user_id));
-        return dishRepository.save(dish);
+        dish.setRestaurant(em.getReference(Restaurant.class,restaurant_id));
+        if(dish.isNew())
+            return dishRepository.save(dish);
+        else{
+            LocalDate today = today();
+            checkNotFoundWithId(dishRepository.getDish(dish.getId(),user_id,today,restaurant_id),dish.getId());
+            return dishRepository.save(dish);
+        }
     }
-    @Transactional
-    @CacheEvict(value = "restaurantTo", allEntries = true)
-    public void updateDishForVote(Dish dish,int user_id) {
-        checkTime(getTimeForAdmin());
-        Assert.notNull(dish,"restaurant must not be null");
-        LocalDate today = today();
-        Dish d=checkNotFoundWithId(dishRepository.getDish(dish.getId(),user_id,today),dish.getId());
-        d.setDescription(dish.getDescription());
-        dishRepository.save(d);
-    }
+
     @Transactional
     @CacheEvict(value = "restaurantTo", allEntries = true)
     public void deleteDishForVote(int dish_id,int userId) {
@@ -141,7 +140,10 @@ public class RestaurantService {
     }
     public List<Dish> getDishes(int restaurant_id, int user_id) {
         LocalDate today = today();
-        return checkNotFoundWithId(dishRepository.getDishes(restaurant_id, user_id,today), restaurant_id);
+        return dishRepository.getDishes(restaurant_id, user_id,today)
+                .stream()
+                .sorted((d1,d2)->d1.getDescription().compareTo(d2.getDescription()))
+                .collect(Collectors.toList());
     }
 
 //////////////////crud Restaurant///////////////
@@ -150,18 +152,16 @@ public class RestaurantService {
     public Restaurant saveRestaurant(Restaurant restaurant, int user_id) {
         checkTime(getTimeForAdmin());
         Assert.notNull(restaurant,"restaurant must not be null");
-        restaurant.setUser(em.getReference(User.class,user_id));
-        return restaurantRepository.save(restaurant);
+        restaurant.setUser(em.getReference(User.class, user_id));
+        if(restaurant.isNew()) {
+            return restaurantRepository.save(restaurant);
+        }
+        else{
+            checkNotFoundWithId(restaurantRepository.getRestaurant(restaurant.getId(),user_id),restaurant.getId());
+            return restaurantRepository.save(restaurant);
+        }
     }
-    @Transactional
-    @CacheEvict(value = "todayTo", allEntries = true)
-    public void updateRestaurant(Restaurant restaurant, int user_id) {
-        checkTime(getTimeForAdmin());
-        Assert.notNull(restaurant,"restaurant must not be null");
-        Restaurant r=checkNotFoundWithId(restaurantRepository.getRestaurant(restaurant.getId(),user_id),restaurant.getId());
-        r.setDescription(restaurant.getDescription());
-        restaurantRepository.save(r);
-    }
+
     @Transactional
     @CacheEvict(value = "todayTo", allEntries = true)
     public void deleteRestaurant(int restaurant_id, int user_id) {
@@ -169,6 +169,9 @@ public class RestaurantService {
         checkNotFoundWithId(restaurantRepository.delete(restaurant_id, user_id)!=0, restaurant_id);
     }
     public List<Restaurant> getRestaurantsForUser(int user_id){
-        return restaurantRepository.getRestaurantsForUser(user_id);
+        return restaurantRepository.getRestaurantsForUser(user_id)
+                .stream()
+                .sorted((r1,r2)->r1.getDescription().compareTo(r2.getDescription()))
+                .collect(Collectors.toList());
     }
 }

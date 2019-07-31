@@ -28,24 +28,15 @@ public class DateTimeUtil {
     }
     public static boolean getTimeForUser(){
         LocalTime now=getLocalTimeNow();
-        if(!isFlagTest())
-            return now.isAfter(TIME_9)&&now.isBefore(TIME_11);
-        else
-            return true;
+        return now.isAfter(TIME_9)&&now.isBefore(TIME_11);
     }
     public static boolean getTimeForAdmin(){
         LocalTime now=getLocalTimeNow();
-        if(!isFlagTest())
-            return now.isBefore(TIME_9);
-        else
-            return true;
+        return now.isBefore(TIME_9);
     }
     public static boolean getTimeForStatistic(){
         LocalTime now=getLocalTimeNow();
-        if(!isFlagTest())
-            return now.isAfter(TIME_1101)&&now.isBefore(TIME_2359);
-        else
-            return true;
+        return now.isAfter(TIME_1101)&&now.isBefore(TIME_2359);
     }
     public static LocalDate today(){
         if(!isFlagTest())

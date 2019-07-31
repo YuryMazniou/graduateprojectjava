@@ -1,7 +1,5 @@
 package ru.javawebinar.graduateprojectjava.to;
 
-import java.util.Objects;
-
 public class TodayTo {
     private final Integer count;
     private final String description;
@@ -32,20 +30,5 @@ public class TodayTo {
                 ", description='" + description + '\'' +
                 ", excess=" + excess +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TodayTo todayTo = (TodayTo) o;
-        return excess == todayTo.excess &&
-                Objects.equals(count, todayTo.count) &&
-                Objects.equals(description, todayTo.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(count, description, excess);
     }
 }

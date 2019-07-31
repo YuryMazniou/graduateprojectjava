@@ -61,7 +61,7 @@ public class RestaurantUtil {
                 .sorted(new Comparator<AllTimeTo>() {
                     @Override
                     public int compare(AllTimeTo o1, AllTimeTo o2) {
-                        int dateCompare=o1.getLocalDate().compareTo(o2.getLocalDate());
+                        int dateCompare=o2.getLocalDate().compareTo(o1.getLocalDate());
                         return dateCompare==0?o1.getDescription().compareTo(o2.getDescription()):dateCompare;
                     }
                 })

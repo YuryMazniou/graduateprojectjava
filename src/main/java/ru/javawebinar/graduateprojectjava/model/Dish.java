@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "dishes")
 public class Dish extends AbstractBaseEntity {
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
@@ -25,7 +25,7 @@ public class Dish extends AbstractBaseEntity {
     private String description;
 
     @Column(name = "price")
-    @NotEmpty
+    @NotNull
     private BigDecimal price;
 
     @Column(name = "time_create_dish", nullable = false)

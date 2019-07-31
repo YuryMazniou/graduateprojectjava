@@ -24,4 +24,13 @@ public class AllTimeTo {
     public boolean isExcess() {
         return excess;
     }
+
+    @Override
+    public String toString() {
+        return "AllTimeTo{" +
+                "description='" + description + '\'' +
+                ", localDate=" + localDate +
+                ", excess=" + excess +
+                '}';
+    }
 }

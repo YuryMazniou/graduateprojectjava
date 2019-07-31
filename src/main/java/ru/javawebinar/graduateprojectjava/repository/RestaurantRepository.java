@@ -20,6 +20,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant,Integer> 
     Restaurant getRestaurant(@Param("restaurant_id")int restaurant_id,@Param("user_id")int user_id);
 
     @Modifying
+    @Transactional
     @Query("DELETE FROM Restaurant r WHERE r.id=:id AND r.user.id=:userId")
     int delete(@Param("id") int id, @Param("userId") int userId);
 }

@@ -17,10 +17,15 @@ public interface DishRepository extends JpaRepository<Dish,Integer> {
     @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.time_create_dish=:today")
     List<Dish> getDishForVote(@Param("today") LocalDate today);
 
-    @Query("SELECT d FROM Dish d JOIN FETCH d.user WHERE d.id=:dish_id AND d.user.id=:user_id AND d.time_create_dish=:today")
-    Dish getDish(@Param("dish_id")int dish_id,@Param("user_id")int user_id,@Param("today")LocalDate today);
+    @Override
+    @Transactional
+    Dish save(Dish entity);
+
+    @Query("SELECT d FROM Dish d WHERE d.id=:dish_id AND d.user.id=:user_id AND d.time_create_dish=:today AND d.restaurant.id=:restaurant_id")
+    Dish getDish(@Param("dish_id")int dish_id,@Param("user_id")int user_id,@Param("today")LocalDate today,@Param("restaurant_id")int restaurant_id);
 
     @Modifying
+    @Transactional
     @Query("DELETE FROM Dish d WHERE d.id=:id AND d.user.id=:userId AND d.time_create_dish=:today")
     int delete(@Param("id") int id, @Param("userId") int userId,@Param("today")LocalDate today);
 
