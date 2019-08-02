@@ -29,14 +29,13 @@ public class Dish extends AbstractBaseEntity {
     private BigDecimal price;
 
     @Column(name = "time_create_dish", nullable = false)
-    @NotNull
     private LocalDate time_create_dish;
 
     public Dish() {
     }
 
     public Dish( String description, BigDecimal price) {
-        this(null,description,price,LocalDate.now());
+        this(null,description,price,null);
     }
 
     public Dish(Integer id, String description, BigDecimal price, LocalDate time_create_dish) {

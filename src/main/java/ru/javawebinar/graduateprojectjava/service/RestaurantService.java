@@ -12,7 +12,7 @@ import ru.javawebinar.graduateprojectjava.repository.HistoryRestaurantRepository
 import ru.javawebinar.graduateprojectjava.repository.RestaurantRepository;
 import ru.javawebinar.graduateprojectjava.repository.VoteRepository;
 import ru.javawebinar.graduateprojectjava.to.AllTimeTo;
-import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
+import ru.javawebinar.graduateprojectjava.to.RestaurantForVoteTo;
 import ru.javawebinar.graduateprojectjava.to.TodayTo;
 
 import javax.persistence.EntityManager;
@@ -46,7 +46,7 @@ public class RestaurantService {
     }
 
     @Cacheable("restaurantTo")
-    public List<RestaurantTo> getRestaurantsWithDishForVote() {
+    public List<RestaurantForVoteTo> getRestaurantsWithDishForVote() {
         LocalDate today = today();
         checkTime(getTimeForUser());
         List<Dish>dishes=dishRepository.getDishForVote(today);
@@ -94,7 +94,7 @@ public class RestaurantService {
         checkTime(getTimeForUser());
         Vote voteToday=voteRepository.getVoteToday(user_id,today);
         if(voteToday==null){
-            Vote vote=new Vote(restaurant_id);
+            Vote vote=new Vote(restaurant_id,today);
             vote.setUser(em.getReference(User.class,user_id));
             return voteRepository.save(vote);
         }
@@ -120,12 +120,14 @@ public class RestaurantService {
     public Dish saveDishForVote(Dish dish,int restaurant_id,int user_id) {
         checkTime(getTimeForAdmin());
         Assert.notNull(dish,"restaurant must not be null");
+        LocalDate today = today();
+        dish.setTime_create_dish(today);
         dish.setUser(em.getReference(User.class,user_id));
         dish.setRestaurant(em.getReference(Restaurant.class,restaurant_id));
-        if(dish.isNew())
+        if(dish.isNew()) {
             return dishRepository.save(dish);
+        }
         else{
-            LocalDate today = today();
             checkNotFoundWithId(dishRepository.getDish(dish.getId(),user_id,today,restaurant_id),dish.getId());
             return dishRepository.save(dish);
         }

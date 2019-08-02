@@ -1,5 +1,8 @@
 package ru.javawebinar.graduateprojectjava.to;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 
 public class AllTimeTo {
@@ -7,7 +10,8 @@ public class AllTimeTo {
     private final LocalDate localDate;
     private final boolean excess;
 
-    public AllTimeTo(String description, LocalDate localDate,boolean excess) {
+    @JsonCreator
+    public AllTimeTo(@JsonProperty("description") String description,@JsonProperty("localDate") LocalDate localDate,@JsonProperty("excess") boolean excess) {
         this.description = description;
         this.localDate = localDate;
         this.excess = excess;

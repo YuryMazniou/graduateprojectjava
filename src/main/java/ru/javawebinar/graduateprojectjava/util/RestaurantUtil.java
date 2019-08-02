@@ -5,7 +5,7 @@ import ru.javawebinar.graduateprojectjava.model.HistoryRestaurantObject;
 import ru.javawebinar.graduateprojectjava.model.Restaurant;
 import ru.javawebinar.graduateprojectjava.model.Vote;
 import ru.javawebinar.graduateprojectjava.to.AllTimeTo;
-import ru.javawebinar.graduateprojectjava.to.RestaurantTo;
+import ru.javawebinar.graduateprojectjava.to.RestaurantForVoteTo;
 import ru.javawebinar.graduateprojectjava.to.TodayTo;
 
 import java.time.LocalDate;
@@ -14,15 +14,15 @@ import java.util.stream.Collectors;
 
 public class RestaurantUtil {
 
-    public static List<RestaurantTo> transformToRestaurantTo(List<Dish>dishes){
-        Map<Integer,RestaurantTo>map=new HashMap<>();
+    public static List<RestaurantForVoteTo> transformToRestaurantTo(List<Dish>dishes){
+        Map<Integer, RestaurantForVoteTo>map=new HashMap<>();
         for (Dish d:dishes) {
             int idRestaurant=d.getRestaurant().getId();
             if(map.containsKey(idRestaurant)){
                 map.get(idRestaurant).getList_of_dish().add(d);
             }
             else{
-                RestaurantTo to=new RestaurantTo(idRestaurant,d.getRestaurant().getDescription(), new ArrayList<Dish>(Arrays.asList(d)));
+                RestaurantForVoteTo to=new RestaurantForVoteTo(idRestaurant,d.getRestaurant().getDescription(), new ArrayList<Dish>(Arrays.asList(d)));
                 map.put(idRestaurant,to);
             }
         }

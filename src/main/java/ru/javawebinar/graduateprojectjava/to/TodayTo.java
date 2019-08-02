@@ -1,11 +1,15 @@
 package ru.javawebinar.graduateprojectjava.to;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class TodayTo {
     private final Integer count;
     private final String description;
     private final boolean excess;
 
-    public TodayTo(Integer count, String description,boolean excess) {
+    @JsonCreator
+    public TodayTo(@JsonProperty("count") Integer count,@JsonProperty("description") String description,@JsonProperty("excess") boolean excess) {
         this.count = count;
         this.description = description;
         this.excess=excess;

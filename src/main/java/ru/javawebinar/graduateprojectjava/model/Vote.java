@@ -23,7 +23,7 @@ public class Vote extends AbstractBaseEntity {
     public Vote() {
     }
 
-    public Vote(Integer restaurant_id) { this(null,restaurant_id,LocalDate.now());}
+    public Vote(Integer restaurant_id,LocalDate time_create_vote) { this(null,restaurant_id,time_create_vote);}
 
     public Vote(Integer id, Integer restaurant_id, LocalDate time_create_vote) {
         super(id);

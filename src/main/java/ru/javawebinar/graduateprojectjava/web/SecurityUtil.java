@@ -10,6 +10,10 @@ public class SecurityUtil {
     private SecurityUtil() {
     }
 
+    public static void setId(int id) {
+        SecurityUtil.id = id;
+    }
+
     public static int authUserId() {
         return id;
     }

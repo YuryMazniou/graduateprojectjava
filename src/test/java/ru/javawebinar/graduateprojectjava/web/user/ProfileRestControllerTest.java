@@ -1,11 +1,9 @@
 package ru.javawebinar.graduateprojectjava.web.user;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import ru.javawebinar.graduateprojectjava.model.Role;
 import ru.javawebinar.graduateprojectjava.model.User;
-import ru.javawebinar.graduateprojectjava.service.UserService;
 import ru.javawebinar.graduateprojectjava.web.AbstractControllerTest;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
 
@@ -18,9 +16,6 @@ import static ru.javawebinar.graduateprojectjava.UserTestData.contentJson;
 import static ru.javawebinar.graduateprojectjava.web.user.ProfileRestController.REST_URL;
 
 class ProfileRestControllerTest extends AbstractControllerTest {
-
-    @Autowired
-    private UserService userService;
 
     @Test
     void testGet() throws Exception {
