@@ -29,6 +29,6 @@ public interface DishRepository extends JpaRepository<Dish,Integer> {
     @Query("DELETE FROM Dish d WHERE d.id=:id AND d.user.id=:userId AND d.time_create_dish=:today")
     int delete(@Param("id") int id, @Param("userId") int userId,@Param("today")LocalDate today);
 
-    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.restaurant.id=:restaurant_id AND d.user.id=:user_id AND d.time_create_dish=:today")
-    List<Dish> getDishes(@Param("restaurant_id")int restaurant_id,@Param("user_id")int user_id,@Param("today")LocalDate today);
+    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.user.id=:user_id AND d.restaurant.id=:restaurant_id AND d.time_create_dish=:today")
+    List<Dish> getDishes(@Param("user_id")int user_id,@Param("today")LocalDate today,@Param("restaurant_id")int restaurant_id);
 }

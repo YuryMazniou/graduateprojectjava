@@ -9,6 +9,7 @@ import ru.javawebinar.graduateprojectjava.model.Restaurant;
 import ru.javawebinar.graduateprojectjava.model.Vote;
 import ru.javawebinar.graduateprojectjava.to.AllTimeTo;
 import ru.javawebinar.graduateprojectjava.to.RestaurantForVoteTo;
+import ru.javawebinar.graduateprojectjava.to.RestaurantStatisticTo;
 import ru.javawebinar.graduateprojectjava.to.TodayTo;
 import ru.javawebinar.graduateprojectjava.util.exception.NotFoundException;
 import ru.javawebinar.graduateprojectjava.util.exception.WrongTimeException;
@@ -36,6 +37,19 @@ class RestaurantServiceTest extends AbstractServiceTest {
     void offTest(){
         testOff();
     }
+
+    @Test
+    void getHistoryDishForAdmin(){
+        List<RestaurantStatisticTo> realLiest=service.getHistoryDishForAdmin(100004,100002);
+        assertMatchList(realLiest,List.of(STATISTIC_TO1,STATISTIC_TO2));
+    }
+
+    @Test
+    void getNotFoundHistoryDishForAdmin(){
+        assertThrows(NotFoundException.class,()->service.getHistoryDishForAdmin(1,100002));
+        assertThrows(NotFoundException.class,()->service.getHistoryDishForAdmin(100004,1));
+    }
+
     @Test
     void testGetRestaurantsWithDishForVote() {
         setLocalTime(LocalTime.of(10,0));
@@ -93,7 +107,7 @@ class RestaurantServiceTest extends AbstractServiceTest {
     @Test
     void testDeleteVote() {
         setLocalTime(LocalTime.of(10,0));
-        service.deleteVote(100014,100001);
+        service.deleteVote(100016,100001);
     }
 
     @Test
@@ -154,7 +168,7 @@ class RestaurantServiceTest extends AbstractServiceTest {
     @Test
     void testDeleteDishForVote() {
         setLocalTime(LocalTime.of(8,0));
-        service.deleteDishForVote(100006,100002);
+        service.deleteDishForVote(100008,100002);
     }
 
     @Test

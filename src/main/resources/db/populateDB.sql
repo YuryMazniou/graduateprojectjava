@@ -25,6 +25,8 @@ INSERT INTO restaurants (description,user_id) VALUES
    ('PizzaMania',100003);
 
 INSERT INTO dishes  (time_create_dish,description,price,restaurant_id,user_id) VALUES
+('2019-07-01','chicken','5.15',100004,100002),
+('2019-07-02','stake','5.50',100004,100002),
 ('2019-07-03','stake','5.50',100004,100002),
 ('2019-07-03','vegetables','4.5',100004,100002),
 ('2019-07-03','wine','9.51',100004,100002),

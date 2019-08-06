@@ -4,9 +4,7 @@ import ru.javawebinar.graduateprojectjava.model.Dish;
 import ru.javawebinar.graduateprojectjava.model.HistoryRestaurantObject;
 import ru.javawebinar.graduateprojectjava.model.Restaurant;
 import ru.javawebinar.graduateprojectjava.model.Vote;
-import ru.javawebinar.graduateprojectjava.to.AllTimeTo;
-import ru.javawebinar.graduateprojectjava.to.RestaurantForVoteTo;
-import ru.javawebinar.graduateprojectjava.to.TodayTo;
+import ru.javawebinar.graduateprojectjava.to.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -65,6 +63,22 @@ public class RestaurantUtil {
                         return dateCompare==0?o1.getDescription().compareTo(o2.getDescription()):dateCompare;
                     }
                 })
+                .collect(Collectors.toList());
+    }
+    public static List<RestaurantStatisticTo> transformToRestaurantStatisticTo(List<Dish> dishes,List<HistoryRestaurantObject> objects){
+        Map<LocalDate,List<DishTo>> mapOfDishTo=new HashMap<>();
+        for (Dish d:dishes) {
+            if(mapOfDishTo.containsKey(d.getTime_create_dish()))
+                mapOfDishTo.get(d.getTime_create_dish()).add(new DishTo(d.getDescription(),d.getPrice()));
+            else {
+                List<DishTo>dishTos=new ArrayList<>();
+                dishTos.add(new DishTo(d.getDescription(), d.getPrice()));
+                mapOfDishTo.put(d.getTime_create_dish(), dishTos);
+            }
+        }
+        return objects.stream()
+                .map(o->new RestaurantStatisticTo(mapOfDishTo.get(o.getVotes_date()),o.getCounts(),o.getVotes_date()))
+                .sorted((r1,r2)->r2.getVotesDate().compareTo(r1.getVotesDate()))
                 .collect(Collectors.toList());
     }
 }

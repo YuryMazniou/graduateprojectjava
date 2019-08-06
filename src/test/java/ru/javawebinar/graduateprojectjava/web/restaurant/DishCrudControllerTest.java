@@ -43,7 +43,7 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
     void deleteDishForVote()throws Exception {
         SecurityUtil.setId(100002);
         setLocalTime(LocalTime.of(8,0));
-        mockMvc.perform(delete(ADMIN_CRUD_DISH +'/'+100006))
+        mockMvc.perform(delete(ADMIN_CRUD_DISH +'/'+100008))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatchD(restaurantService.getDishes(100004,100002),List.of(DISH2,DISH3));
@@ -54,7 +54,7 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
         SecurityUtil.setId(100002);
         setLocalTime(LocalTime.of(8,0));
         Dish updated= DISH_UPDATE;
-        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update?restaurant_id=100004&dish_id=100006")
+        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update?restaurant_id=100004&dish_id=100008")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());

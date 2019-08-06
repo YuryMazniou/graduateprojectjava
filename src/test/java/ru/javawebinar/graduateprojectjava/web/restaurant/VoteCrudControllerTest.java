@@ -45,7 +45,7 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
     void deleteVote() throws Exception {
         SecurityUtil.setId(100001);
         setLocalTime(LocalTime.of(10,0));
-        mockMvc.perform(delete(PROFILE_CRUD_VOTE +'/'+100014))
+        mockMvc.perform(delete(PROFILE_CRUD_VOTE +'/'+100016))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class,()->restaurantService.getVoteToday(100001));

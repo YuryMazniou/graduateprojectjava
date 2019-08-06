@@ -12,11 +12,12 @@ public class HistoryRestaurantObject extends AbstractBaseEntity {
     private LocalDate votes_date;
 
     public HistoryRestaurantObject(){
-
     }
+
     public HistoryRestaurantObject(Integer counts, String description) {
         this(null, counts,description, LocalDate.now());
     }
+
     public HistoryRestaurantObject(Integer id, Integer counts, String description, LocalDate votes_date) {
         super(id);
         this.counts = counts;

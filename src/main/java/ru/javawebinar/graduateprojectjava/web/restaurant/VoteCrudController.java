@@ -20,7 +20,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class VoteCrudController {
     public static final String PROFILE_CRUD_VOTE="/restaurants/profile/vote";
 
-    private static final Logger log = getLogger(RestaurantCrudController.class);
+    private static final Logger log = getLogger(VoteCrudController.class);
 
     private RestaurantService restaurantService;
 

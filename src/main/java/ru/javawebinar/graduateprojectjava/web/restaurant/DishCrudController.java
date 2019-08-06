@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.graduateprojectjava.model.Dish;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
+import ru.javawebinar.graduateprojectjava.to.RestaurantStatisticTo;
 import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
 
 import java.net.URI;
@@ -23,7 +24,7 @@ import static ru.javawebinar.graduateprojectjava.util.ValidationUtil.checkNew;
 public class DishCrudController {
     public static final String ADMIN_CRUD_DISH="/restaurants/admin/dish";
 
-    private static final Logger log = getLogger(RestaurantCrudController.class);
+    private static final Logger log = getLogger(DishCrudController.class);
 
     private RestaurantService restaurantService;
 
