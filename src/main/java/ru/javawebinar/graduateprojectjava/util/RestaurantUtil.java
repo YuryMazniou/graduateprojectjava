@@ -17,10 +17,10 @@ public class RestaurantUtil {
         for (Dish d:dishes) {
             int idRestaurant=d.getRestaurant().getId();
             if(map.containsKey(idRestaurant)){
-                map.get(idRestaurant).getList_of_dish().add(d);
+                map.get(idRestaurant).getList_of_dish().add(new DishTo(d.getDescription(),d.getPrice()));
             }
             else{
-                RestaurantForVoteTo to=new RestaurantForVoteTo(idRestaurant,d.getRestaurant().getDescription(), new ArrayList<Dish>(Arrays.asList(d)));
+                RestaurantForVoteTo to=new RestaurantForVoteTo(idRestaurant,d.getRestaurant().getDescription(), new ArrayList<DishTo>(Arrays.asList(new DishTo(d.getDescription(),d.getPrice()))));
                 map.put(idRestaurant,to);
             }
         }

@@ -54,9 +54,7 @@ class RestaurantServiceTest extends AbstractServiceTest {
     void testGetRestaurantsWithDishForVote() {
         setLocalTime(LocalTime.of(10,0));
         List<RestaurantForVoteTo>list=service.getRestaurantsWithDishForVote();
-        assertMatchR(list,List.of(RESTAURANT_TO_1, RESTAURANT_TO_2));
-        assertMatchD(list.get(0).getList_of_dish(),DISH_LIST1);
-        assertMatchD(list.get(1).getList_of_dish(),DISH_LIST2);
+        assertMatchList(list,List.of(RESTAURANT_TO_1, RESTAURANT_TO_2));
     }
 
     @Test

@@ -35,8 +35,15 @@ public class RestaurantServiceData {
     public static final Restaurant RESTAURANT_USER100002=new Restaurant(100004,"Garage");
     public static Restaurant RESTAURANT_UPDATE=new Restaurant(RESTAURANT_USER100002.getId(),"update");
 
-    public static final RestaurantForVoteTo RESTAURANT_TO_1 =new RestaurantForVoteTo(100004,"Garage", DISH_LIST1);
-    public static final RestaurantForVoteTo RESTAURANT_TO_2 =new RestaurantForVoteTo(100005,"PizzaMania", DISH_LIST2);
+    public static final DishTo DISH_TO1=new DishTo("stake",new BigDecimal("5.5000"));
+    public static final DishTo DISH_TO2=new DishTo("vegetables",new BigDecimal("4.5000"));
+    public static final DishTo DISH_TO3=new DishTo("wine",new BigDecimal("9.5100"));
+    public static final DishTo DISH_TO4=new DishTo("chicken",new BigDecimal("5.1500"));
+    public static final DishTo DISH_TO5=new DishTo("fruit",new BigDecimal("4.1500"));
+    public static final DishTo DISH_TO6=new DishTo("milk",new BigDecimal("2.1500"));
+
+    public static final RestaurantForVoteTo RESTAURANT_TO_1 =new RestaurantForVoteTo(100004,"Garage",List.of(DISH_TO1,DISH_TO2,DISH_TO3) );
+    public static final RestaurantForVoteTo RESTAURANT_TO_2 =new RestaurantForVoteTo(100005,"PizzaMania",List.of(DISH_TO4,DISH_TO5,DISH_TO6));
 
     public static final TodayTo TODAY_TO_1=new TodayTo(2,"Garage",true);
     public static final TodayTo TODAY_TO_2=new TodayTo(1,"PizzaMania",false);
@@ -50,10 +57,6 @@ public class RestaurantServiceData {
 
     public static final RestaurantStatisticTo STATISTIC_TO1=new RestaurantStatisticTo(List.of(new DishTo("stake",new BigDecimal("5.5000"))),12345,LocalDate.of(2019,7,2));
     public static final RestaurantStatisticTo STATISTIC_TO2=new RestaurantStatisticTo(List.of(new DishTo("chicken",new BigDecimal("5.1500"))),1234,LocalDate.of(2019,7,1));
-
-    public static void assertMatchR(Iterable<RestaurantForVoteTo> actual, Iterable<RestaurantForVoteTo> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("list_of_dish").isEqualTo(expected);
-    }
 
     public static void assertMatchD(List<Dish> actual, List<Dish> expected) {
         assertThat(actual).usingElementComparatorIgnoringFields("user","restaurant").isEqualTo(expected);
@@ -74,14 +77,16 @@ public class RestaurantServiceData {
         assertThat(actual).usingElementComparatorIgnoringFields("dishes","user").isEqualTo(expected);
     }
 
+    public static <T> void assertMatch(Iterable<T> expected){
+        assertThat(expected).isEmpty();
+    }
+
     public static ResultMatcher contentJsonR(Restaurant ... expected) {
         return result -> assertMatchRestList(readListFromJsonMvcResult(result, Restaurant.class), List.of(expected));
     }
+
     public static ResultMatcher contentJsonD(Dish ... expected) {
         return result -> assertMatchD(readListFromJsonMvcResult(result, Dish.class), List.of(expected));
-    }
-    public static <T> void assertMatch(Iterable<T> expected){
-        assertThat(expected).isEmpty();
     }
 
     public static ResultMatcher contentJson(Vote expected) {
