@@ -10,7 +10,7 @@ import static ru.javawebinar.graduateprojectjava.web.SecurityUtil.authUserId;
 @RestController
 @RequestMapping(ProfileRestController.REST_URL)
 public class ProfileRestController extends AbstractUserController {
-    public static final String REST_URL = "/restaurant/profile";
+    public static final String REST_URL = "/restaurants/profile";
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public User get() {
