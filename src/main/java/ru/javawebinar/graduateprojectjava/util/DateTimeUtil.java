@@ -9,8 +9,8 @@ public class DateTimeUtil {
     private static final LocalTime TIME_1101 =LocalTime.of(11,1);
     private static final LocalTime TIME_2359 =LocalTime.of(23,59);
     private static boolean flagTest=false;
-    private static LocalDate localDate;
-    private static LocalTime localTime;
+    private static LocalDate localDate=LocalDate.of(1,1,1);
+    private static LocalTime localTime=LocalTime.of(0,0,1);
 
     public static LocalTime getLocalTimeNow(){
         if(!isFlagTest())return LocalTime.now();

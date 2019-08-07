@@ -21,7 +21,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @RestController
 @RequestMapping(value = StatisticController.STATISTIC_REST, produces = MediaType.APPLICATION_JSON_VALUE)
 public class StatisticController {
-    private static final Logger log = getLogger(RestaurantCrudController.class);
+    private static final Logger log = getLogger(StatisticController.class);
 
     public static final String STATISTIC_REST="/restaurants/profile/statistic";
 
