@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+
+    <Resource name="jdbc/graduateprojectjava"
+              auth="Container"
+              type="javax.sql.DataSource"
+              url="jdbc:hsqldb:file:D:/temp/graduateDB"
+              username="sa"
+              driverClassName="org.hsqldb.jdbcDriver"
+              maxActive="20"
+              maxIdle="30"
+              maxWait="10000"/>
+</Context>
