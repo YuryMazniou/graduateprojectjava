@@ -26,3 +26,12 @@ As a result, provide a link to github repository.
 It should contain the code and **README.md with API documentation and curl commands to get data for voting and vote.**
 
 -----------------------------
+
+###### curl samples (application deployed in application context `graduateprojectjava`).
+> For windows use `Git Bash`
+###### get All Users
+`curl -s http://localhost:8080/graduateprojectjava/restaurants/admin/users --user admin1@gmail.com:admin1`
+###### get Users 100001
+`curl -s http://localhost:8080/graduateprojectjava/restaurants/admin/users/100001 --user admin1@gmail.com:admin1`
+###### get History
+`curl -s http://localhost:8080/graduateprojectjava/restaurants/profile/statistic/history --user user1@yandex.ru:password1`
