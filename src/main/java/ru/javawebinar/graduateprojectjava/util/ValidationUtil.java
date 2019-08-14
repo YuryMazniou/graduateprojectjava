@@ -1,6 +1,7 @@
 package ru.javawebinar.graduateprojectjava.util;
 
 
+import ru.javawebinar.graduateprojectjava.HasId;
 import ru.javawebinar.graduateprojectjava.model.AbstractBaseEntity;
 import ru.javawebinar.graduateprojectjava.util.exception.NotFoundException;
 import ru.javawebinar.graduateprojectjava.util.exception.WrongTimeException;
@@ -38,12 +39,12 @@ public class ValidationUtil {
         }
     }
 
-    public static void assureIdConsistent(AbstractBaseEntity entity, int id) {
+    public static void assureIdConsistent(HasId bean, int id) {
 //      conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
-        if (entity.isNew()) {
-            entity.setId(id);
-        } else if (entity.getId() != id) {
-            throw new IllegalArgumentException(entity + " must be with id=" + id);
+        if (bean.isNew()) {
+            bean.setId(id);
+        } else if (bean.getId() != id) {
+            throw new IllegalArgumentException(bean + " must be with id=" + id);
         }
     }
 

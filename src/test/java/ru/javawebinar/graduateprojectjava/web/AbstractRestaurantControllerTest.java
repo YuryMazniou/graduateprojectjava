@@ -18,7 +18,7 @@ public class AbstractRestaurantControllerTest extends AbstractControllerTest {
     }
     @AfterEach
     void offTest(){
-        SecurityUtil.setAuthUserId(AbstractBaseEntity.START_SEQ);
+        //SecurityUtil.setAuthUserId(AbstractBaseEntity.START_SEQ);
         testOff();
     }
 }

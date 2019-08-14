@@ -5,9 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.graduateprojectjava.model.Vote;
 import ru.javawebinar.graduateprojectjava.util.exception.NotFoundException;
-import ru.javawebinar.graduateprojectjava.web.AbstractControllerTest;
 import ru.javawebinar.graduateprojectjava.web.AbstractRestaurantControllerTest;
-import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
 
 import java.time.LocalTime;
@@ -18,7 +16,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
+import static ru.javawebinar.graduateprojectjava.TestUtil.*;
 import static ru.javawebinar.graduateprojectjava.TestUtil.readFromJson;
+import static ru.javawebinar.graduateprojectjava.UserTestData.ADMIN2;
+import static ru.javawebinar.graduateprojectjava.UserTestData.USER2;
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,7 +28,7 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void saveUserVote() throws Exception {
-        SecurityUtil.setId(100003);
+        mockAuthorize(ADMIN2);
         setLocalTime(LocalTime.of(10,0));
         Vote expected = new Vote(VOTE_CREATE.getRestaurant_id(),VOTE_CREATE.getTime_create_vote()) ;
         ResultActions action = mockMvc.perform(put(PROFILE_CRUD_VOTE+"/100005")
@@ -43,7 +44,7 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void deleteVote() throws Exception {
-        SecurityUtil.setId(100001);
+        mockAuthorize(USER2);
         setLocalTime(LocalTime.of(10,0));
         mockMvc.perform(delete(PROFILE_CRUD_VOTE +'/'+100016))
                 .andDo(print())
@@ -53,7 +54,7 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getVoteToday() throws Exception {
-        SecurityUtil.setId(100001);
+        mockAuthorize(USER2);
         setLocalTime(LocalTime.of(10,0));
         mockMvc.perform(get(PROFILE_CRUD_VOTE))
                 .andExpect(status().isOk())

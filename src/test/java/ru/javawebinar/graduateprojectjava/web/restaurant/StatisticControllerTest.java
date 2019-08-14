@@ -3,13 +3,14 @@ package ru.javawebinar.graduateprojectjava.web.restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import ru.javawebinar.graduateprojectjava.web.AbstractRestaurantControllerTest;
-import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
 import java.time.LocalTime;
 import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
+import static ru.javawebinar.graduateprojectjava.TestUtil.mockAuthorize;
+import static ru.javawebinar.graduateprojectjava.UserTestData.*;
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.setLocalTime;
 
 class StatisticControllerTest extends AbstractRestaurantControllerTest {
@@ -17,7 +18,7 @@ class StatisticControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getRestaurantsWithDishForVote()throws Exception {
-        SecurityUtil.setId(100002);
+        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(10,0));
         mockMvc.perform(get(STATISTIC_URL+"/listforvotes"))
                 .andExpect(status().isOk())
@@ -44,7 +45,7 @@ class StatisticControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getHistoryDishForRestaurant() throws Exception {
-        SecurityUtil.setId(100002);
+        mockAuthorize(ADMIN1);
         mockMvc.perform(get(STATISTIC_URL+"/dish/"+100004))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

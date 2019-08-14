@@ -2,17 +2,19 @@ package ru.javawebinar.graduateprojectjava.model;
 
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Persistable;
+import ru.javawebinar.graduateprojectjava.HasId;
 
 import javax.persistence.*;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public class AbstractBaseEntity implements Persistable<Integer> {
+public class AbstractBaseEntity implements HasId {
     public static final int START_SEQ = 100000;
 
     @Id
     @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1, initialValue = START_SEQ)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
+
     protected Integer id;
 
     protected AbstractBaseEntity() {
@@ -23,16 +25,19 @@ public class AbstractBaseEntity implements Persistable<Integer> {
     }
 
     @Override
-    public Integer getId() {
-        return id;
-    }
-
     public void setId(Integer id) {
         this.id = id;
     }
 
     @Override
-    public boolean isNew() { return  this.id == null;}
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ":" + id;
+    }
 
     @Override
     public boolean equals(Object o) {

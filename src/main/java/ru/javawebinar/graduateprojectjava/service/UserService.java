@@ -3,20 +3,28 @@ package ru.javawebinar.graduateprojectjava.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javawebinar.graduateprojectjava.model.User;
-import ru.javawebinar.graduateprojectjava.repository.RestaurantRepository;
 import ru.javawebinar.graduateprojectjava.repository.UserRepository;
+import ru.javawebinar.graduateprojectjava.AuthorizedUser;
+import ru.javawebinar.graduateprojectjava.to.UserTo;
+import ru.javawebinar.graduateprojectjava.util.UserUtil;
 
 import java.util.List;
 
 import static ru.javawebinar.graduateprojectjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.graduateprojectjava.util.ValidationUtil.checkNotFoundWithId;
 
-@Service
-public class UserService {
+@Service("userService")
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+public class UserService implements UserDetailsService {
     private static final Sort SORT_NAME_EMAIL = new Sort(Sort.Direction.ASC, "name", "email");
     private final UserRepository repository;
 
@@ -51,6 +59,31 @@ public class UserService {
     @CacheEvict(value = "users", allEntries = true)
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
-        checkNotFoundWithId(repository.save(user), user.getId());
+//      checkNotFoundWithId : check works only for JDBC, disabled
+        repository.save(user);
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    @Transactional
+    public void update(UserTo userTo) {
+        User user = get(userTo.id());
+        repository.save(UserUtil.updateFromTo(user, userTo));
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    @Transactional
+    public void enable(int id, boolean enabled) {
+        User user = get(id);
+        user.setEnabled(enabled);
+        repository.save(user);  // !! need only for JDBC implementation
+    }
+
+    @Override
+    public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = repository.getByEmail(email.toLowerCase());
+        if (user == null) {
+            throw new UsernameNotFoundException("User " + email + " is not found");
+        }
+        return new AuthorizedUser(user);
     }
 }
