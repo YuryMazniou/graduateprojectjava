@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.graduateprojectjava.model.User;
+import ru.javawebinar.graduateprojectjava.to.UserTo;
 
 import java.net.URI;
 import java.util.List;
@@ -51,13 +52,20 @@ public class AdminRestController extends AbstractUserController {
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody User user, @PathVariable int id) {
-        super.update(user, id);
+    public void update(@RequestBody UserTo userTo, @PathVariable int id) {
+        super.update(userTo, id);
     }
 
     @GetMapping("/by")
     public User getByMail(@RequestParam String email) {
         log.info("getByEmail {}", email);
         return service.getByEmail(email);
+    }
+
+    @Override
+    @PostMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void enable(@PathVariable int id, @RequestParam boolean enabled) {
+        super.enable(id, enabled);
     }
 }

@@ -14,14 +14,8 @@
     <beans:bean name="noopEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
 
     <authentication-manager>
-        <authentication-provider>
+        <authentication-provider user-service-ref="userService">
             <password-encoder ref="noopEncoder"/>
-            <user-service>
-                <user name="user1@yandex.ru" password="password1" authorities="ROLE_USER"/>
-                <user name="user2@yandex.ru" password="password2" authorities="ROLE_USER"/>
-                <user name="admin1@gmail.com" password="admin1" authorities="ROLE_ADMIN"/>
-                <user name="admin2@gmail.com" password="admin2" authorities="ROLE_ADMIN"/>
-            </user-service>
         </authentication-provider>
     </authentication-manager>
 </beans:beans>

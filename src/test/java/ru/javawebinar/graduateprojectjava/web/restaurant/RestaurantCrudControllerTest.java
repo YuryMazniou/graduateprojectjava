@@ -5,9 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.graduateprojectjava.model.Restaurant;
 import ru.javawebinar.graduateprojectjava.web.AbstractRestaurantControllerTest;
-import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
-
 import java.time.LocalTime;
 import java.util.List;
 
@@ -16,7 +14,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
+import static ru.javawebinar.graduateprojectjava.TestUtil.mockAuthorize;
 import static ru.javawebinar.graduateprojectjava.TestUtil.readFromJson;
+import static ru.javawebinar.graduateprojectjava.UserTestData.*;
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 
 
@@ -26,7 +26,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void createRestaurant()throws Exception {
-        SecurityUtil.setId(100002);
+        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(8,0));
         Restaurant expected = new Restaurant(RESTAURANT_CREATE.getDescription());
         ResultActions action = mockMvc.perform(post(ADMIN_CRUD_REST)
@@ -42,7 +42,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void deleteRestaurant()throws Exception {
-        SecurityUtil.setId(100002);
+        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(8,0));
         mockMvc.perform(delete(ADMIN_CRUD_REST +'/'+100004))
                 .andDo(print())
@@ -52,7 +52,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void updateRestaurant()throws Exception {
-        SecurityUtil.setId(100002);
+        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(8,0));
         Restaurant updated = RESTAURANT_UPDATE;
         mockMvc.perform(put(ADMIN_CRUD_REST + '/' + 100004)
@@ -64,7 +64,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getRestaurantsForUser()throws Exception {
-        SecurityUtil.setId(100002);
+        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(8,0));
         mockMvc.perform(get(ADMIN_CRUD_REST))
                 .andExpect(status().isOk())
