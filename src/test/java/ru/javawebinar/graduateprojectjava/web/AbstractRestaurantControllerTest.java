@@ -2,7 +2,6 @@ package ru.javawebinar.graduateprojectjava.web;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import ru.javawebinar.graduateprojectjava.model.AbstractBaseEntity;
 
 import java.time.LocalDate;
 
@@ -18,7 +17,6 @@ public class AbstractRestaurantControllerTest extends AbstractControllerTest {
     }
     @AfterEach
     void offTest(){
-        //SecurityUtil.setAuthUserId(AbstractBaseEntity.START_SEQ);
         testOff();
     }
 }

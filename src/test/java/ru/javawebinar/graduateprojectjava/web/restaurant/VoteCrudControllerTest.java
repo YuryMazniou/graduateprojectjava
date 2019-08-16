@@ -28,11 +28,11 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void saveUserVote() throws Exception {
-        mockAuthorize(ADMIN2);
         setLocalTime(LocalTime.of(10,0));
         Vote expected = new Vote(VOTE_CREATE.getRestaurant_id(),VOTE_CREATE.getTime_create_vote()) ;
         ResultActions action = mockMvc.perform(put(PROFILE_CRUD_VOTE+"/100005")
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN2))
                 .content(JsonUtil.writeValue(expected)))
                 .andExpect(status().isCreated());
 
@@ -44,9 +44,9 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void deleteVote() throws Exception {
-        mockAuthorize(USER2);
         setLocalTime(LocalTime.of(10,0));
-        mockMvc.perform(delete(PROFILE_CRUD_VOTE +'/'+100016))
+        mockMvc.perform(delete(PROFILE_CRUD_VOTE +'/'+100016)
+                .with(userHttpBasic(USER2)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertThrows(NotFoundException.class,()->restaurantService.getVoteToday(100001));
@@ -54,9 +54,9 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getVoteToday() throws Exception {
-        mockAuthorize(USER2);
         setLocalTime(LocalTime.of(10,0));
-        mockMvc.perform(get(PROFILE_CRUD_VOTE))
+        mockMvc.perform(get(PROFILE_CRUD_VOTE)
+                .with(userHttpBasic(USER2)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(VOTE_GET));

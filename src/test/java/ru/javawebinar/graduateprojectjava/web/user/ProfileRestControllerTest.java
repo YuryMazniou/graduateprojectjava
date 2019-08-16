@@ -23,27 +23,33 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGet() throws Exception {
-        mockAuthorize(USER1);
-        mockMvc.perform(get(REST_URL))
+        mockMvc.perform(get(REST_URL)
+                .with(userHttpBasic(USER1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(USER1));
     }
 
     @Test
+    void getUnAuth() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void testDelete() throws Exception {
-        mockAuthorize(USER1);
-        mockMvc.perform(delete(REST_URL))
+        mockMvc.perform(delete(REST_URL)
+                .with(userHttpBasic(USER1)))
                 .andExpect(status().isNoContent());
         assertMatch(userService.getAll(), ADMIN1,ADMIN2,USER2);
     }
 
     @Test
     void testUpdate() throws Exception {
-        mockAuthorize(USER1);
         User updated = new User(USER_ID1, "newName", "newemail@ya.ru", "newPassword", Role.ROLE_USER);
         UserTo updatedTo=new UserTo(updated.getId(),updated.getName(),updated.getEmail(),updated.getPassword());
         mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(USER1))
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());

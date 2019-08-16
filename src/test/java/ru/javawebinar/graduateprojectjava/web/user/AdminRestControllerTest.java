@@ -56,14 +56,27 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void getUnAuth() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void getForbidden() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL)
+                .with(userHttpBasic(USER1)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void testUpdate() throws Exception {
-        mockAuthorize(ADMIN1);
         User updated = new User(USER1);
         updated.setName("UpdatedName");
         updated.setPassword("11111111");
         UserTo updatedTo=new UserTo(updated.getId(),updated.getName(),updated.getEmail(),updated.getPassword());
         mockMvc.perform(put(REST_URL + USER_ID1)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andExpect(status().isNoContent());
 
@@ -97,9 +110,9 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
     @Test
     void enable() throws Exception {
-        mockAuthorize(ADMIN1);
         mockMvc.perform(post(REST_URL + USER_ID1).param("enabled", "false")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 

@@ -14,8 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
-import static ru.javawebinar.graduateprojectjava.TestUtil.mockAuthorize;
-import static ru.javawebinar.graduateprojectjava.TestUtil.readFromJson;
+import static ru.javawebinar.graduateprojectjava.TestUtil.*;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 
@@ -26,11 +25,11 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void createRestaurant()throws Exception {
-        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(8,0));
         Restaurant expected = new Restaurant(RESTAURANT_CREATE.getDescription());
         ResultActions action = mockMvc.perform(post(ADMIN_CRUD_REST)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
                 .content(JsonUtil.writeValue(expected)))
                 .andExpect(status().isCreated());
 
@@ -42,9 +41,9 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void deleteRestaurant()throws Exception {
-        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(8,0));
-        mockMvc.perform(delete(ADMIN_CRUD_REST +'/'+100004))
+        mockMvc.perform(delete(ADMIN_CRUD_REST +'/'+100004)
+                .with(userHttpBasic(ADMIN1)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(restaurantService.getRestaurantsForUser(100002));
@@ -52,11 +51,11 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void updateRestaurant()throws Exception {
-        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(8,0));
         Restaurant updated = RESTAURANT_UPDATE;
         mockMvc.perform(put(ADMIN_CRUD_REST + '/' + 100004)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
         assertMatchRestList(restaurantService.getRestaurantsForUser(100002), List.of(updated));
@@ -64,9 +63,9 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getRestaurantsForUser()throws Exception {
-        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(8,0));
-        mockMvc.perform(get(ADMIN_CRUD_REST))
+        mockMvc.perform(get(ADMIN_CRUD_REST)
+                .with(userHttpBasic(ADMIN1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJsonR(RESTAURANT_USER100002));

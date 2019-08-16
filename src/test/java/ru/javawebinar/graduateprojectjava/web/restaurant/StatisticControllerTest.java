@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
-import static ru.javawebinar.graduateprojectjava.TestUtil.mockAuthorize;
+import static ru.javawebinar.graduateprojectjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.setLocalTime;
 
@@ -18,9 +18,9 @@ class StatisticControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getRestaurantsWithDishForVote()throws Exception {
-        mockAuthorize(ADMIN1);
         setLocalTime(LocalTime.of(10,0));
-        mockMvc.perform(get(STATISTIC_URL+"/listforvotes"))
+        mockMvc.perform(get(STATISTIC_URL+"/listforvotes")
+                .with(userHttpBasic(ADMIN1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJsonStatisticListForVote(List.of(RESTAURANT_TO_1, RESTAURANT_TO_2)));
@@ -45,8 +45,8 @@ class StatisticControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getHistoryDishForRestaurant() throws Exception {
-        mockAuthorize(ADMIN1);
-        mockMvc.perform(get(STATISTIC_URL+"/dish/"+100004))
+        mockMvc.perform(get(STATISTIC_URL+"/dish/"+100004)
+                .with(userHttpBasic(ADMIN1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJsonStatisticDish(List.of(STATISTIC_TO1,STATISTIC_TO2)));
