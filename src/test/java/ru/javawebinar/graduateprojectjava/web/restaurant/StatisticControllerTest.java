@@ -29,7 +29,8 @@ class StatisticControllerTest extends AbstractRestaurantControllerTest {
     @Test
     void getTodayRestaurantsStatistic()throws Exception {
         setLocalTime(LocalTime.of(12,0));
-        mockMvc.perform(get(STATISTIC_URL+"/resultofday"))
+        mockMvc.perform(get(STATISTIC_URL+"/resultofday")
+                .with(userHttpBasic(USER1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJsonStatisticToday(TODAY_TO_LIST));
@@ -37,7 +38,8 @@ class StatisticControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getAllTimeRestaurantStatistic()throws Exception {
-        mockMvc.perform(get(STATISTIC_URL+"/history"))
+        mockMvc.perform(get(STATISTIC_URL+"/history")
+                .with(userHttpBasic(USER1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJsonStatisticAllTime(ALL_TIME_TO_LIST));
