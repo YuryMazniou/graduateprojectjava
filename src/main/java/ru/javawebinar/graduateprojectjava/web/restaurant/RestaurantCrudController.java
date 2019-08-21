@@ -11,6 +11,7 @@ import ru.javawebinar.graduateprojectjava.model.Restaurant;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
 import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -31,7 +32,7 @@ public class RestaurantCrudController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant){
+    public ResponseEntity<Restaurant> createRestaurant(@Valid @RequestBody Restaurant restaurant){
         int user_id= SecurityUtil.authUserId();
         log.info("create restaurant  {}",user_id);
         checkNew(restaurant);
@@ -52,7 +53,7 @@ public class RestaurantCrudController {
 
     @PutMapping(value = "/{restaurant_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateRestaurant(@RequestBody Restaurant restaurant,@PathVariable int restaurant_id){
+    public void updateRestaurant(@Valid @RequestBody Restaurant restaurant,@PathVariable int restaurant_id){
         int user_id= SecurityUtil.authUserId();
         log.info("update restaurant  {}",user_id);
         assureIdConsistent(restaurant,restaurant_id);

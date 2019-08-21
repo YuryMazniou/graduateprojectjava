@@ -1,5 +1,7 @@
 package ru.javawebinar.graduateprojectjava.util;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import ru.javawebinar.graduateprojectjava.model.Role;
 import ru.javawebinar.graduateprojectjava.model.User;
 import ru.javawebinar.graduateprojectjava.to.UserTo;
@@ -18,6 +20,13 @@ public class UserUtil {
         user.setName(userTo.getName());
         user.setEmail(userTo.getEmail().toLowerCase());
         user.setPassword(userTo.getPassword());
+        return user;
+    }
+
+    public static User prepareToSave(User user, PasswordEncoder passwordEncoder) {
+        String password = user.getPassword();
+        user.setPassword(StringUtils.hasText(password) ? passwordEncoder.encode(password) : password);
+        user.setEmail(user.getEmail().toLowerCase());
         return user;
     }
 }

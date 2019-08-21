@@ -1,5 +1,7 @@
 package ru.javawebinar.graduateprojectjava.model;
 
+import ru.javawebinar.graduateprojectjava.View;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,7 +15,7 @@ public class Restaurant extends AbstractBaseEntity {
     private String description;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @NotNull
+    @NotNull(groups = View.Persist.class)
     @JoinColumn(name = "user_id")
     private User user;
 

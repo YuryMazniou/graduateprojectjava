@@ -3,6 +3,7 @@ package ru.javawebinar.graduateprojectjava;
 import org.springframework.test.web.servlet.ResultMatcher;
 import ru.javawebinar.graduateprojectjava.model.Role;
 import ru.javawebinar.graduateprojectjava.model.User;
+import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class UserTestData {
     public static final User ADMIN2= new User(ADMIN_ID2, "Admin2", "admin2@gmail.com", "admin2", Role.ROLE_ADMIN,Role.ROLE_USER);
 
     public static void assertMatch(User actual, User expected) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered");
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered","password");
     }
 
     public static void assertMatch(Iterable<User> actual, User... expected) {
@@ -31,7 +32,7 @@ public class UserTestData {
     }
 
     public static void assertMatch(Iterable<User> actual, Iterable<User> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("registered").isEqualTo(expected);
+        assertThat(actual).usingElementComparatorIgnoringFields("registered","password").isEqualTo(expected);
     }
 
     public static ResultMatcher contentJson(User... expected) {
@@ -40,5 +41,9 @@ public class UserTestData {
 
     public static ResultMatcher contentJson(User expected) {
         return result -> assertMatch(readFromJsonMvcResult(result, User.class), expected);
+    }
+
+    public static String jsonWithPassword(User user, String passw) {
+        return JsonUtil.writeAdditionProps(user, "password", passw);
     }
 }

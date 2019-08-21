@@ -1,5 +1,7 @@
 package ru.javawebinar.graduateprojectjava.model;
 
+import ru.javawebinar.graduateprojectjava.View;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -11,12 +13,12 @@ import java.time.LocalDate;
 @Table(name = "dishes")
 public class Dish extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull
+    @NotNull(groups = View.Persist.class)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @NotNull
+    @NotNull(groups = View.Persist.class)
     @JoinColumn(name = "user_id")
     private User user;
 
