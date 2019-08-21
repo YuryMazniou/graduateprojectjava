@@ -34,8 +34,8 @@ public class ExceptionInfoHandler {
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(WrongTimeException.class)
-    public ErrorInfo handleError(HttpServletRequest req, WrongTimeException e) {
-        return logAndGetErrorInfo(req, e, false, WRONG_TIME);
+    public ErrorInfo handleError(HttpServletRequest req) {
+        return new ErrorInfo(req.getRequestURL(), WRONG_TIME, "this action cannot be done at this time");
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
@@ -43,7 +43,7 @@ public class ExceptionInfoHandler {
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
         log.error(DATA_ERROR + " at request " + req.getRequestURL(), rootCause);
-        if(rootCause.toString().contains("users_unique_email_idx"))return new ErrorInfo(req.getRequestURL(), DATA_ERROR, "User with this email already exists");
+        if(rootCause.toString().contains("USERS_UNIQUE_EMAIL_IDX"))return new ErrorInfo(req.getRequestURL(), DATA_ERROR, "User with this email already exists");
         return new ErrorInfo(req.getRequestURL(), DATA_ERROR, rootCause.toString());
     }
 

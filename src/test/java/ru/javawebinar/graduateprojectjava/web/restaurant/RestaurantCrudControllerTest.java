@@ -40,6 +40,19 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
     }
 
     @Test
+    void createWrongTimeRestaurant()throws Exception {
+        setLocalTime(LocalTime.of(12,0));
+        Restaurant expected = new Restaurant(RESTAURANT_CREATE.getDescription());
+        mockMvc.perform(post(ADMIN_CRUD_REST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
+                .content(JsonUtil.writeValue(expected)))
+                .andDo(print())
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/restaurant\",\"type\":\"WRONG_TIME\",\"detail\":\"this action cannot be done at this time\"}"))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     void deleteRestaurant()throws Exception {
         setLocalTime(LocalTime.of(8,0));
         mockMvc.perform(delete(ADMIN_CRUD_REST +'/'+100004)
@@ -59,6 +72,16 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
         assertMatchRestList(restaurantService.getRestaurantsForUser(100002), List.of(updated));
+    }
+
+    @Test
+    void updateNotFoundRestaurant()throws Exception {
+        setLocalTime(LocalTime.of(8,0));
+        mockMvc.perform(put(ADMIN_CRUD_REST + '/' + 100004)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
+                .content(JsonUtil.writeValue(new Restaurant())))
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test

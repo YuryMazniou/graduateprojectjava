@@ -61,6 +61,30 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
     }
 
     @Test
+    void updateWrongTimeDishForVote()throws Exception {
+        setLocalTime(LocalTime.of(12,0));
+        Dish updated= DISH_UPDATE;
+        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update?restaurant_id=100004&dish_id=100008")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
+                .content(JsonUtil.writeValue(updated)))
+                .andDo(print())
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/dish/update\",\"type\":\"WRONG_TIME\",\"detail\":\"this action cannot be done at this time\"}"))
+                .andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
+    void updateNotFoundDishForVote()throws Exception {
+        setLocalTime(LocalTime.of(8,0));
+        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update?restaurant_id=100004&dish_id=100008")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
+                .content(JsonUtil.writeValue(new Dish())))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     void getDishes() throws Exception {
         setLocalTime(LocalTime.of(8,0));
         mockMvc.perform(get(ADMIN_CRUD_DISH+'/'+100004)
