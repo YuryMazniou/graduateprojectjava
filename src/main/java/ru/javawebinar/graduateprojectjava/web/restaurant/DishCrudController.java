@@ -11,6 +11,7 @@ import ru.javawebinar.graduateprojectjava.model.Dish;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
 import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class DishCrudController {
     }
 
     @PostMapping(value = "/{restaurant_id}",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createDishForVote(@RequestBody Dish dish, @PathVariable int restaurant_id){
+    public ResponseEntity<Dish> createDishForVote(@Valid @RequestBody Dish dish, @PathVariable int restaurant_id){
         int user_id= SecurityUtil.authUserId();
         checkNew(dish);
         log.info("save dish {}",user_id);
@@ -54,7 +55,7 @@ public class DishCrudController {
 
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateDishForVote(@RequestBody Dish dish,@RequestParam int restaurant_id,@RequestParam int dish_id){
+    public void updateDishForVote(@Valid @RequestBody Dish dish,@RequestParam int restaurant_id,@RequestParam int dish_id){
         int user_id= SecurityUtil.authUserId();
         log.info("update dish  {}",user_id);
         assureIdConsistent(dish,dish_id);

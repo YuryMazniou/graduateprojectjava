@@ -7,10 +7,10 @@ DELETE FROM HISTORY_RESTAURANT_OBJECT;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password) VALUES
-  ('User1', 'user1@yandex.ru', 'password1'),
-  ('User2', 'user2@yandex.ru', 'password2'),
-  ('Admin1', 'admin1@gmail.com', 'admin1'),
-  ('Admin2', 'admin2@gmail.com', 'admin2');
+  ('User1', 'user1@yandex.ru', '{noop}password1'),
+  ('User2', 'user2@yandex.ru', '{noop}password2'),
+  ('Admin1', 'admin1@gmail.com', '{noop}admin1'),
+  ('Admin2', 'admin2@gmail.com', '{noop}admin2');
 
 INSERT INTO user_roles (role, user_id) VALUES
   ('ROLE_USER', 100000),

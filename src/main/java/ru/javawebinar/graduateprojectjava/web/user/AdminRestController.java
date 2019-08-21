@@ -8,6 +8,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.graduateprojectjava.model.User;
 import ru.javawebinar.graduateprojectjava.to.UserTo;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class AdminRestController extends AbstractUserController {
     @GetMapping
     public List<User> getAll() {
         log.info("getAll");
-        return service.getAll();
+        return super.getAll();
     }
 
     @Override
@@ -32,7 +33,7 @@ public class AdminRestController extends AbstractUserController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createWithLocation(@RequestBody User user) {
+    public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
         log.info("create {}", user);
         checkNew(user);
         User created = service.create(user);
@@ -52,8 +53,8 @@ public class AdminRestController extends AbstractUserController {
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody UserTo userTo, @PathVariable int id) {
-        super.update(userTo, id);
+    public void update(@Valid @RequestBody User user, @PathVariable int id) {
+        super.update(user, id);
     }
 
     @GetMapping("/by")

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.graduateprojectjava.TestUtil;
 import ru.javawebinar.graduateprojectjava.model.Role;
 import ru.javawebinar.graduateprojectjava.model.User;
@@ -84,12 +86,21 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void updateNotFound() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + USER_ID1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
+                .content(JsonUtil.writeValue(new User())))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     void testCreate() throws Exception {
         User expected = new User(null, "New", "new@gmail.com", "newPass", Role.ROLE_USER, Role.ROLE_ADMIN);
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN1))
-                .content(JsonUtil.writeValue(expected)))
+                .content(jsonWithPassword(expected, "newPass")))
                 .andExpect(status().isCreated());
 
         User returned = readFromJson(action, User.class);
@@ -97,6 +108,15 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
         assertMatch(returned, expected);
         assertMatch(userService.getAll(), ADMIN1,ADMIN2,expected,USER1,USER2);
+    }
+
+    @Test
+    void createNotFound() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
+                .content(jsonWithPassword(new User(), "newPass")))
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -117,5 +137,18 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         assertFalse(userService.get(USER_ID1).isEnabled());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void createDuplicateEmail() throws Exception{
+        User expected = new User(null, "New", "admin@gmail.com", "newPass", Role.ROLE_USER);
+        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
+                .content(jsonWithPassword(expected, "newPass")))
+                .andDo(print())
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/users/\",\"type\":\"DATA_ERROR\",\"detail\":\"User with this email already exists\"}"))
+                .andExpect(status().isConflict());
     }
 }

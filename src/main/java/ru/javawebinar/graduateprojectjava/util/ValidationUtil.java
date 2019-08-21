@@ -3,6 +3,7 @@ package ru.javawebinar.graduateprojectjava.util;
 
 import ru.javawebinar.graduateprojectjava.HasId;
 import ru.javawebinar.graduateprojectjava.model.AbstractBaseEntity;
+import ru.javawebinar.graduateprojectjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.graduateprojectjava.util.exception.NotFoundException;
 import ru.javawebinar.graduateprojectjava.util.exception.WrongTimeException;
 
@@ -35,7 +36,7 @@ public class ValidationUtil {
 
     public static void checkNew(AbstractBaseEntity entity) {
         if (!entity.isNew()) {
-            throw new IllegalArgumentException(entity + " must be new (id=null)");
+            throw new IllegalRequestDataException(entity + " must be new (id=null)");
         }
     }
 
@@ -44,7 +45,7 @@ public class ValidationUtil {
         if (bean.isNew()) {
             bean.setId(id);
         } else if (bean.getId() != id) {
-            throw new IllegalArgumentException(bean + " must be with id=" + id);
+            throw new IllegalRequestDataException(bean + " must be with id=" + id);
         }
     }
 
