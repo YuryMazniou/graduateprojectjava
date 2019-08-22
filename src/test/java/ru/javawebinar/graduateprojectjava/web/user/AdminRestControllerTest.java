@@ -6,21 +6,16 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.javawebinar.graduateprojectjava.TestUtil;
 import ru.javawebinar.graduateprojectjava.model.Role;
 import ru.javawebinar.graduateprojectjava.model.User;
-import ru.javawebinar.graduateprojectjava.to.UserTo;
 import ru.javawebinar.graduateprojectjava.web.AbstractControllerTest;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
-
 import java.util.Collections;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.javawebinar.graduateprojectjava.TestUtil.*;
 import static ru.javawebinar.graduateprojectjava.TestUtil.readFromJson;
 import static ru.javawebinar.graduateprojectjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;

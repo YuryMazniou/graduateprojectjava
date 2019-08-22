@@ -2,7 +2,6 @@ package ru.javawebinar.graduateprojectjava.to;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import ru.javawebinar.graduateprojectjava.model.Dish;
 
 import java.util.List;
 

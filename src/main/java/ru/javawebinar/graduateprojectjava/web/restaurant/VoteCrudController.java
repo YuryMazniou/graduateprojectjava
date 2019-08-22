@@ -39,12 +39,14 @@ public class VoteCrudController {
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
+
     @DeleteMapping("/{vote_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteVote(@PathVariable int vote_id){
         int user_id= SecurityUtil.authUserId();
         restaurantService.deleteVote(vote_id,user_id);
     }
+
     @GetMapping
     public Vote getVoteToday(){
         int user_id= SecurityUtil.authUserId();

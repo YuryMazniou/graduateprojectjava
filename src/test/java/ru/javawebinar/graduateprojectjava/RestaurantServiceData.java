@@ -24,16 +24,16 @@ public class RestaurantServiceData {
     public static final List<Dish>DISH_LIST1=List.of(DISH1,DISH2,DISH3);
     public static final List<Dish>DISH_LIST2=List.of(DISH4,DISH5,DISH6);
     public static final Dish DISH_CREATE=new Dish(null,"create",new BigDecimal("10.5000"),LocalDate.of(2019,7,3));
-    public static Dish DISH_UPDATE=new Dish(DISH1.getId(),"update dish",new BigDecimal("1.1000"),DISH1.getTime_create_dish());
+    public static final Dish DISH_UPDATE=new Dish(DISH1.getId(),"update dish",new BigDecimal("1.1000"),DISH1.getTime_create_dish());
 
     public static final Vote VOTE_ADMIN2=new Vote(100021,100005,LocalDate.of(2019,7,3));
-    public static Vote VOTE_CREATE=new Vote(100005,LocalDate.of(2019,7,3));
+    public static final Vote VOTE_CREATE=new Vote(100005,LocalDate.of(2019,7,3));
     public static final Vote VOTE_UPDATE=new Vote(100016,100004,LocalDate.of(2019,7,3));
     public static final Vote VOTE_GET=new Vote(100016,100005,LocalDate.of(2019,7,3));
 
     public static final Restaurant RESTAURANT_CREATE=new Restaurant("Create Restaurant");
     public static final Restaurant RESTAURANT_USER100002=new Restaurant(100004,"Garage");
-    public static Restaurant RESTAURANT_UPDATE=new Restaurant(RESTAURANT_USER100002.getId(),"update");
+    public static final Restaurant RESTAURANT_UPDATE=new Restaurant(RESTAURANT_USER100002.getId(),"update");
 
     public static final DishTo DISH_TO1=new DishTo("stake",new BigDecimal("5.5000"));
     public static final DishTo DISH_TO2=new DishTo("vegetables",new BigDecimal("4.5000"));

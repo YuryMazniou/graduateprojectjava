@@ -16,7 +16,7 @@ import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
 class JsonUtilTest {
 
     @Test
-    void testReadWriteValue() throws Exception {
+    void readWriteValue() throws Exception {
         String json = JsonUtil.writeValue(DISH1);
         System.out.println(json);
         Dish dish = JsonUtil.readValue(json, Dish.class);
@@ -24,7 +24,7 @@ class JsonUtilTest {
     }
 
     @Test
-    void testReadWriteValues() throws Exception {
+    void readWriteValues() throws Exception {
         String json = JsonUtil.writeValue(DISH_LIST1);
         System.out.println(json);
         List<Dish> dishes = JsonUtil.readValues(json, Dish.class);
@@ -32,7 +32,7 @@ class JsonUtilTest {
     }
 
     @Test
-    void testWriteOnlyAccess() throws Exception {
+    void writeOnlyAccess() throws Exception {
         String json = JsonUtil.writeValue(UserTestData.USER1);
         System.out.println(json);
         assertThat(json, not(containsString("password")));
