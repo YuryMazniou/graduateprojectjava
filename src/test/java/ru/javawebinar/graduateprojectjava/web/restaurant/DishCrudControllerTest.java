@@ -3,15 +3,17 @@ package ru.javawebinar.graduateprojectjava.web.restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.graduateprojectjava.model.Dish;
+import ru.javawebinar.graduateprojectjava.util.exception.ErrorType;
 import ru.javawebinar.graduateprojectjava.web.AbstractRestaurantControllerTest;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
 import java.time.LocalTime;
 import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.contentJsonD;
 import static ru.javawebinar.graduateprojectjava.TestUtil.*;
@@ -50,8 +52,9 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
     @Test
     void updateDishForVote()throws Exception {
         setLocalTime(LocalTime.of(8,0));
-        Dish updated= DISH_UPDATE;
-        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update?restaurant_id=100004&dish_id=100008")
+        Dish updated= new Dish(DISH_UPDATE.getId(),DISH_UPDATE.getDescription(),DISH_UPDATE.getPrice(),DISH_UPDATE.getTime_create_dish());
+        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update")
+                .param("restaurant_id","100004").param("dish_id","100008")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN1))
                 .content(JsonUtil.writeValue(updated)))
@@ -63,25 +66,16 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
     @Test
     void updateWrongTimeDishForVote()throws Exception {
         setLocalTime(LocalTime.of(12,0));
-        Dish updated= DISH_UPDATE;
-        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update?restaurant_id=100004&dish_id=100008")
+        Dish updated= new Dish(DISH_UPDATE.getDescription(),DISH_UPDATE.getPrice());
+        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update")
+                .param("restaurant_id","100004").param("dish_id","100008")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN1))
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
-                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/dish/update\",\"type\":\"WRONG_TIME\",\"detail\":\"this action cannot be done at this time\"}"))
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/dish/update\",\"type\":\"WRONG_TIME\",\"details\":[\"this action cannot be done at this time\"]}"))
                 .andExpect(status().isUnprocessableEntity());
 
-    }
-
-    @Test
-    void updateNotFoundDishForVote()throws Exception {
-        setLocalTime(LocalTime.of(8,0));
-        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update?restaurant_id=100004&dish_id=100008")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(userHttpBasic(ADMIN1))
-                .content(JsonUtil.writeValue(new Dish())))
-                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -92,5 +86,32 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJsonD(DISH1,DISH2,DISH3));
+    }
+
+    @Test
+    void createInvalid() throws Exception {
+        Dish invalid = new Dish( "", null);
+        mockMvc.perform(MockMvcRequestBuilders.post(ADMIN_CRUD_DISH+'/'+100004)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(invalid))
+                .with(userHttpBasic(ADMIN1)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.type").value(ErrorType.VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    void updateInvalid() throws Exception {
+        Dish invalid = new Dish( "", null);
+        mockMvc.perform(MockMvcRequestBuilders.put(ADMIN_CRUD_DISH + "/update")
+                .param("restaurant_id","100004").param("dish_id","100008")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(invalid))
+                .with(userHttpBasic(ADMIN1)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.type").value(ErrorType.VALIDATION_ERROR.name()))
+                .andDo(print());
     }
 }

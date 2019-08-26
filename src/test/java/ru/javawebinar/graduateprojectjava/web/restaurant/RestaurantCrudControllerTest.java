@@ -3,7 +3,9 @@ package ru.javawebinar.graduateprojectjava.web.restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.graduateprojectjava.model.Restaurant;
+import ru.javawebinar.graduateprojectjava.util.exception.ErrorType;
 import ru.javawebinar.graduateprojectjava.web.AbstractRestaurantControllerTest;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
 import java.time.LocalTime;
@@ -11,8 +13,7 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
 import static ru.javawebinar.graduateprojectjava.TestUtil.*;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;
@@ -40,6 +41,19 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
     }
 
     @Test
+    void createInvalid() throws Exception {
+        Restaurant invalid=new Restaurant();
+        mockMvc.perform(MockMvcRequestBuilders.post(ADMIN_CRUD_REST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(invalid))
+                .with(userHttpBasic(ADMIN1)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.type").value(ErrorType.VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
     void createWrongTimeRestaurant()throws Exception {
         setLocalTime(LocalTime.of(12,0));
         Restaurant expected = new Restaurant(RESTAURANT_CREATE.getDescription());
@@ -48,7 +62,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
                 .with(userHttpBasic(ADMIN1))
                 .content(JsonUtil.writeValue(expected)))
                 .andDo(print())
-                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/restaurant\",\"type\":\"WRONG_TIME\",\"detail\":\"this action cannot be done at this time\"}"))
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/restaurant\",\"type\":\"WRONG_TIME\",\"details\":[\"this action cannot be done at this time\"]}"))
                 .andExpect(status().isUnprocessableEntity());
     }
 
@@ -75,13 +89,16 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
     }
 
     @Test
-    void updateNotFoundRestaurant()throws Exception {
-        setLocalTime(LocalTime.of(8,0));
-        mockMvc.perform(put(ADMIN_CRUD_REST + '/' + 100004)
+    void updateInvalid() throws Exception {
+        Restaurant invalid=new Restaurant();
+        mockMvc.perform(MockMvcRequestBuilders.put(ADMIN_CRUD_REST + '/' + 100004)
                 .contentType(MediaType.APPLICATION_JSON)
-                .with(userHttpBasic(ADMIN1))
-                .content(JsonUtil.writeValue(new Restaurant())))
-                .andExpect(status().isUnprocessableEntity());
+                .content(JsonUtil.writeValue(invalid))
+                .with(userHttpBasic(ADMIN1)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.type").value(ErrorType.VALIDATION_ERROR.name()))
+                .andDo(print());
     }
 
     @Test

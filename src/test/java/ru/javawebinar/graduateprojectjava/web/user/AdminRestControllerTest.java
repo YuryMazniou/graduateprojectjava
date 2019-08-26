@@ -8,14 +8,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.graduateprojectjava.model.Role;
 import ru.javawebinar.graduateprojectjava.model.User;
+import ru.javawebinar.graduateprojectjava.util.exception.ErrorType;
 import ru.javawebinar.graduateprojectjava.web.AbstractControllerTest;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
 import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static ru.javawebinar.graduateprojectjava.TestUtil.readFromJson;
 import static ru.javawebinar.graduateprojectjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;
@@ -80,15 +81,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void updateNotFound() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + USER_ID1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(userHttpBasic(ADMIN1))
-                .content(JsonUtil.writeValue(new User())))
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
     void testCreate() throws Exception {
         User expected = new User(null, "New", "new@gmail.com", "newPass", Role.ROLE_USER, Role.ROLE_ADMIN);
         ResultActions action = mockMvc.perform(post(REST_URL)
@@ -102,15 +94,6 @@ class AdminRestControllerTest extends AbstractControllerTest {
 
         assertMatch(returned, expected);
         assertMatch(userService.getAll(), ADMIN1,ADMIN2,expected,USER1,USER2);
-    }
-
-    @Test
-    void createNotFound() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(userHttpBasic(ADMIN1))
-                .content(jsonWithPassword(new User(), "newPass")))
-                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -142,7 +125,33 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN1))
                 .content(jsonWithPassword(expected, "newPass")))
                 .andDo(print())
-                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/users/\",\"type\":\"DATA_ERROR\",\"detail\":\"User with this email already exists\"}"))
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/users/\",\"type\":\"DATA_ERROR\",\"details\":\"User with this email already exists\"}"))
                 .andExpect(status().isConflict());
+    }
+
+    @Test
+    void createInvalid() throws Exception {
+        User expected = new User(null, null, "", "newPass", Role.ROLE_USER, Role.ROLE_ADMIN);
+        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
+                .content(JsonUtil.writeValue(expected)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.type").value(ErrorType.VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    void updateInvalid() throws Exception {
+        User updated = new User(USER1);
+        updated.setName("");
+        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + USER_ID1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN1))
+                .content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isUnprocessableEntity())
+                .andDo(print())
+                .andExpect(jsonPath("$.type").value(ErrorType.VALIDATION_ERROR.name()))
+                .andDo(print());
     }
 }
