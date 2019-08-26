@@ -1,5 +1,6 @@
 package ru.javawebinar.graduateprojectjava.model;
 
+import org.hibernate.validator.constraints.SafeHtml;
 import ru.javawebinar.graduateprojectjava.View;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class Dish extends AbstractBaseEntity {
 
     @Column(name = "description")
     @NotBlank
+    @SafeHtml(groups = {View.Web.class})
     private String description;
 
     @Column(name = "price")

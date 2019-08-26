@@ -1,5 +1,6 @@
 package ru.javawebinar.graduateprojectjava.model;
 
+import org.hibernate.validator.constraints.SafeHtml;
 import ru.javawebinar.graduateprojectjava.View;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.List;
 public class Restaurant extends AbstractBaseEntity {
     @Column(name = "description")
     @NotBlank
+    @SafeHtml(groups = {View.Web.class})
     private String description;
 
     @OneToOne(fetch = FetchType.LAZY)

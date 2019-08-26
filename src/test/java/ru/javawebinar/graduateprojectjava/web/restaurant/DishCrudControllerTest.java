@@ -8,6 +8,9 @@ import ru.javawebinar.graduateprojectjava.model.Dish;
 import ru.javawebinar.graduateprojectjava.util.exception.ErrorType;
 import ru.javawebinar.graduateprojectjava.web.AbstractRestaurantControllerTest;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -19,6 +22,7 @@ import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.contentJs
 import static ru.javawebinar.graduateprojectjava.TestUtil.*;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;
 import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.setLocalTime;
+import static ru.javawebinar.graduateprojectjava.util.exception.ErrorType.VALIDATION_ERROR;
 
 class DishCrudControllerTest extends AbstractRestaurantControllerTest {
     private static final String ADMIN_CRUD_DISH=DishCrudController.ADMIN_CRUD_DISH;
@@ -97,7 +101,7 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
                 .with(userHttpBasic(ADMIN1)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.type").value(ErrorType.VALIDATION_ERROR.name()))
+                .andExpect(jsonPath("$.type").value(VALIDATION_ERROR.name()))
                 .andDo(print());
     }
 
@@ -111,7 +115,21 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
                 .with(userHttpBasic(ADMIN1)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.type").value(ErrorType.VALIDATION_ERROR.name()))
+                .andExpect(jsonPath("$.type").value(VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    void updateHtmlUnsafe() throws Exception {
+        Dish invalid = new Dish( "<script>alert(123)</script>", new BigDecimal("1.1"));
+        mockMvc.perform(MockMvcRequestBuilders.put(ADMIN_CRUD_DISH + "/update")
+                .param("restaurant_id","100004").param("dish_id","100008")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(invalid))
+                .with(userHttpBasic(ADMIN1)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR))
                 .andDo(print());
     }
 }

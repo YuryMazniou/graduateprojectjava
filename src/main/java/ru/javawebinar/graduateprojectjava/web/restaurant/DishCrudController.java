@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javawebinar.graduateprojectjava.View;
 import ru.javawebinar.graduateprojectjava.model.Dish;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
 import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
@@ -34,7 +36,7 @@ public class DishCrudController {
     }
 
     @PostMapping(value = "/{restaurant_id}",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createDishForVote(@Valid @RequestBody Dish dish, @PathVariable int restaurant_id){
+    public ResponseEntity<Dish> createDishForVote(@Validated(View.Web.class) @RequestBody Dish dish, @PathVariable int restaurant_id){
         int user_id= SecurityUtil.authUserId();
         checkNew(dish);
         log.info("save dish {}",user_id);
@@ -55,7 +57,7 @@ public class DishCrudController {
 
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateDishForVote(@Valid @RequestBody Dish dish,@RequestParam int restaurant_id,@RequestParam int dish_id){
+    public void updateDishForVote(@Validated(View.Web.class) @RequestBody Dish dish,@RequestParam int restaurant_id,@RequestParam int dish_id){
         int user_id= SecurityUtil.authUserId();
         log.info("update dish  {}",user_id);
         assureIdConsistent(dish,dish_id);

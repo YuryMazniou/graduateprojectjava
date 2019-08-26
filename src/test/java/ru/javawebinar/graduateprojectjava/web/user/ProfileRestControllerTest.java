@@ -23,8 +23,8 @@ import static ru.javawebinar.graduateprojectjava.web.user.ProfileRestController.
 class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
-    void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL)
+    void get() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL)
                 .with(userHttpBasic(USER1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -38,15 +38,15 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL)
+    void delete() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete(REST_URL)
                 .with(userHttpBasic(USER1)))
                 .andExpect(status().isNoContent());
         assertMatch(userService.getAll(), ADMIN1,ADMIN2,USER2);
     }
 
     @Test
-    void testUpdate() throws Exception {
+    void update() throws Exception {
         User updated = new User(USER_ID1, "newName", "newemail@ya.ru", "newPassword", Role.ROLE_USER);
         UserTo updatedTo=new UserTo(updated.getId(),updated.getName(),updated.getEmail(),updated.getPassword());
         mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON)

@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javawebinar.graduateprojectjava.TestUtil.readFromJson;
 import static ru.javawebinar.graduateprojectjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;
+import static ru.javawebinar.graduateprojectjava.util.exception.ErrorType.VALIDATION_ERROR;
 
 class AdminRestControllerTest extends AbstractControllerTest {
 
@@ -125,7 +126,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN1))
                 .content(jsonWithPassword(expected, "newPass")))
                 .andDo(print())
-                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/users/\",\"type\":\"DATA_ERROR\",\"details\":\"User with this email already exists\"}"))
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/users/\",\"type\":\"VALIDATION_ERROR\",\"details\":[\"User with this email already exists\"]}"))
                 .andExpect(status().isConflict());
     }
 
@@ -152,6 +153,20 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andDo(print())
                 .andExpect(jsonPath("$.type").value(ErrorType.VALIDATION_ERROR.name()))
+                .andDo(print());
+    }
+
+    @Test
+    void updateHtmlUnsafe() throws Exception {
+        User invalid = new User(USER1);
+        invalid.setName("<script>alert(123)</script>");
+        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + USER_ID1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(invalid))
+                .with(userHttpBasic(ADMIN1)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR))
                 .andDo(print());
     }
 }

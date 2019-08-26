@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javawebinar.graduateprojectjava.View;
 import ru.javawebinar.graduateprojectjava.model.Restaurant;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
 import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
@@ -32,7 +34,7 @@ public class RestaurantCrudController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createRestaurant(@Valid @RequestBody Restaurant restaurant){
+    public ResponseEntity<Restaurant> createRestaurant(@Validated(View.Web.class) @RequestBody Restaurant restaurant){
         int user_id= SecurityUtil.authUserId();
         log.info("create restaurant  {}",user_id);
         checkNew(restaurant);
@@ -53,7 +55,7 @@ public class RestaurantCrudController {
 
     @PutMapping(value = "/{restaurant_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateRestaurant(@Valid @RequestBody Restaurant restaurant,@PathVariable int restaurant_id){
+    public void updateRestaurant(@Validated(View.Web.class) @RequestBody Restaurant restaurant,@PathVariable int restaurant_id){
         int user_id= SecurityUtil.authUserId();
         log.info("update restaurant  {}",user_id);
         assureIdConsistent(restaurant,restaurant_id);
