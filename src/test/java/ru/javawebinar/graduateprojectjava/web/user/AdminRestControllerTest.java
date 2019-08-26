@@ -126,7 +126,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(ADMIN1))
                 .content(jsonWithPassword(expected, "newPass")))
                 .andDo(print())
-                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/users/\",\"type\":\"VALIDATION_ERROR\",\"details\":[\"User with this email already exists\"]}"))
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/users/\",\"type\":\"VALIDATION_ERROR\",\"typeMessage\":\"Validation error\",\"details\":[\"User with this email already exists\"]}"))
                 .andExpect(status().isConflict());
     }
 

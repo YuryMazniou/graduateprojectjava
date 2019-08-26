@@ -38,8 +38,9 @@ public class ExceptionInfoHandler {
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(WrongTimeException.class)
-    public ErrorInfo handleError(HttpServletRequest req) {
-        return new ErrorInfo(req.getRequestURL(), WRONG_TIME, "this action cannot be done at this time");
+    public ErrorInfo handleError(HttpServletRequest req,WrongTimeException e) {
+        return logAndGetErrorInfo(req,e,false,WRONG_TIME,"This action cannot be done at this time");
+        //return new ErrorInfo(req.getRequestURL(), WRONG_TIME, "this action cannot be done at this time");
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
@@ -47,7 +48,8 @@ public class ExceptionInfoHandler {
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
         log.error(DATA_ERROR + " at request " + req.getRequestURL(), rootCause);
-        if(rootCause.toString().contains("USERS_UNIQUE_EMAIL_IDX"))return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, "User with this email already exists");
+        if(rootCause.toString().contains("USERS_UNIQUE_EMAIL_IDX"))/*return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, "User with this email already exists");*/
+            return logAndGetErrorInfo(req,e,false,VALIDATION_ERROR,"User with this email already exists");
         return logAndGetErrorInfo(req, e, true, DATA_ERROR);
     }
 
@@ -80,13 +82,9 @@ public class ExceptionInfoHandler {
     }
 
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType,String... details) {
-        Throwable rootCause = ValidationUtil.getRootCause(e);
-        if (logException) {
-            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
-        } else {
-            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
-        }
+        Throwable rootCause = ValidationUtil.logAndGetRootCause(log, req, e, logException, errorType);
         return new ErrorInfo(req.getRequestURL(), errorType,
-                details.length != 0 ? details : new String[]{rootCause.toString()});
+                errorType.getErrorCode(),
+                details.length != 0 ? details : new String[]{rootCause.getClass().getName()});
     }
 }

@@ -77,7 +77,7 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
                 .with(userHttpBasic(ADMIN1))
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
-                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/dish/update\",\"type\":\"WRONG_TIME\",\"details\":[\"this action cannot be done at this time\"]}"))
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/dish/update\",\"type\":\"WRONG_TIME\",\"typeMessage\":\"Wrong time\",\"details\":[\"This action cannot be done at this time\"]}"))
                 .andExpect(status().isUnprocessableEntity());
 
     }
