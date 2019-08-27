@@ -5,15 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javawebinar.graduateprojectjava.AuthorizedUser;
 import ru.javawebinar.graduateprojectjava.View;
 import ru.javawebinar.graduateprojectjava.model.Restaurant;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
-import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
-
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -34,11 +33,10 @@ public class RestaurantCrudController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createRestaurant(@Validated(View.Web.class) @RequestBody Restaurant restaurant){
-        int user_id= SecurityUtil.authUserId();
-        log.info("create restaurant  {}",user_id);
+    public ResponseEntity<Restaurant> createRestaurant(@Validated(View.Web.class) @RequestBody Restaurant restaurant,@AuthenticationPrincipal AuthorizedUser authUser){
+        log.info("create restaurant  {}",authUser.getId());
         checkNew(restaurant);
-        Restaurant created=restaurantService.saveRestaurant(restaurant,user_id);
+        Restaurant created=restaurantService.saveRestaurant(restaurant,authUser.getId());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(ADMIN_CRUD_REST + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -47,25 +45,22 @@ public class RestaurantCrudController {
 
     @DeleteMapping("/{restaurant_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteRestaurant(@PathVariable int restaurant_id){
-        int user_id= SecurityUtil.authUserId();
-        log.info("delete restaurant  {}",user_id);
-        restaurantService.deleteRestaurant(restaurant_id,user_id);
+    public void deleteRestaurant(@PathVariable int restaurant_id,@AuthenticationPrincipal AuthorizedUser authUser){
+        log.info("delete restaurant  {}",authUser.getId());
+        restaurantService.deleteRestaurant(restaurant_id,authUser.getId());
     }
 
     @PutMapping(value = "/{restaurant_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateRestaurant(@Validated(View.Web.class) @RequestBody Restaurant restaurant,@PathVariable int restaurant_id){
-        int user_id= SecurityUtil.authUserId();
-        log.info("update restaurant  {}",user_id);
+    public void updateRestaurant(@Validated(View.Web.class) @RequestBody Restaurant restaurant,@PathVariable int restaurant_id,@AuthenticationPrincipal AuthorizedUser authUser){
+        log.info("update restaurant  {}",authUser.getId());
         assureIdConsistent(restaurant,restaurant_id);
-        restaurantService.saveRestaurant(restaurant,user_id);
+        restaurantService.saveRestaurant(restaurant,authUser.getId());
     }
 
     @GetMapping
-    public List<Restaurant> getRestaurantsForUser(){
-        int user_id= SecurityUtil.authUserId();
-        log.info("get user's restaurants  {}",user_id);
-        return restaurantService.getRestaurantsForUser(user_id);
+    public List<Restaurant> getRestaurantsForUser(@AuthenticationPrincipal AuthorizedUser authUser){
+        log.info("get user's restaurants  {}",authUser.getId());
+        return restaurantService.getRestaurantsForUser(authUser.getId());
     }
 }

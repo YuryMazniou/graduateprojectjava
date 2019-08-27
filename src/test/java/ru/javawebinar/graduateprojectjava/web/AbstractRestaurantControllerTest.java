@@ -4,19 +4,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.time.LocalDate;
-
-import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
+import java.time.LocalTime;
 
 public class AbstractRestaurantControllerTest extends AbstractControllerTest {
+
     @Override
     @BeforeEach
     void setUp() {
         super.setUp();
-        testOn();
-        setLocalDate(LocalDate.of(2019,7,3));
+        dateTime.setLocalDate(LocalDate.of(2019,7,3));
     }
+
     @AfterEach
     void offTest(){
-        testOff();
+        dateTime.setLocalDate(LocalDate.of(1,1,1));
+        dateTime.setLocalTime(LocalTime.of(0,0,1));
     }
 }

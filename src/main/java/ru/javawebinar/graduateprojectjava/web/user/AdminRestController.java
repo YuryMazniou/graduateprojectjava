@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.graduateprojectjava.View;
 import ru.javawebinar.graduateprojectjava.model.User;
-
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 

@@ -5,11 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javawebinar.graduateprojectjava.AuthorizedUser;
 import ru.javawebinar.graduateprojectjava.model.Vote;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
-import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
 
 import java.net.URI;
 
@@ -30,10 +31,9 @@ public class VoteCrudController {
     }
 
     @PutMapping(value ="/{restaurant_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> saveUserVote(@PathVariable int restaurant_id){
-        int user_id= SecurityUtil.authUserId();
-        log.info("save user's vote {}",user_id);
-        Vote created = restaurantService.saveUserVote(restaurant_id,user_id);
+    public ResponseEntity<Vote> saveUserVote(@PathVariable int restaurant_id,@AuthenticationPrincipal AuthorizedUser authUser){
+        log.info("save user's vote {}",authUser.getId());
+        Vote created = restaurantService.saveUserVote(restaurant_id,authUser.getId());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(PROFILE_CRUD_VOTE + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -42,14 +42,12 @@ public class VoteCrudController {
 
     @DeleteMapping("/{vote_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteVote(@PathVariable int vote_id){
-        int user_id= SecurityUtil.authUserId();
-        restaurantService.deleteVote(vote_id,user_id);
+    public void deleteVote(@PathVariable int vote_id,@AuthenticationPrincipal AuthorizedUser authUser){
+        restaurantService.deleteVote(vote_id,authUser.getId());
     }
 
     @GetMapping
-    public Vote getVoteToday(){
-        int user_id= SecurityUtil.authUserId();
-        return restaurantService.getVoteToday(user_id);
+    public Vote getVoteToday(@AuthenticationPrincipal AuthorizedUser authUser){
+        return restaurantService.getVoteToday(authUser.getId());
     }
 }

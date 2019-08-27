@@ -11,14 +11,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
 import static ru.javawebinar.graduateprojectjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;
-import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.setLocalTime;
 
 class StatisticControllerTest extends AbstractRestaurantControllerTest {
     private static final String STATISTIC_URL=StatisticController.STATISTIC_REST;
 
     @Test
     void getRestaurantsWithDishForVote()throws Exception {
-        setLocalTime(LocalTime.of(10,0));
+        dateTime.setLocalTime(LocalTime.of(10,0));
         mockMvc.perform(get(STATISTIC_URL+"/listforvotes")
                 .with(userHttpBasic(ADMIN1)))
                 .andExpect(status().isOk())
@@ -28,7 +27,7 @@ class StatisticControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getTodayRestaurantsStatistic()throws Exception {
-        setLocalTime(LocalTime.of(12,0));
+        dateTime.setLocalTime(LocalTime.of(12,0));
         mockMvc.perform(get(STATISTIC_URL+"/resultofday")
                 .with(userHttpBasic(USER1)))
                 .andExpect(status().isOk())

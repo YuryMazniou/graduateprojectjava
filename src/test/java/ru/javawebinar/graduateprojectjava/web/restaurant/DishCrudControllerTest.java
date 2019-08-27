@@ -5,12 +5,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.graduateprojectjava.model.Dish;
-import ru.javawebinar.graduateprojectjava.util.exception.ErrorType;
 import ru.javawebinar.graduateprojectjava.web.AbstractRestaurantControllerTest;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -21,7 +19,6 @@ import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.contentJsonD;
 import static ru.javawebinar.graduateprojectjava.TestUtil.*;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;
-import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.setLocalTime;
 import static ru.javawebinar.graduateprojectjava.util.exception.ErrorType.VALIDATION_ERROR;
 
 class DishCrudControllerTest extends AbstractRestaurantControllerTest {
@@ -29,7 +26,7 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void createDishForVote()throws Exception {
-        setLocalTime(LocalTime.of(8,0));
+        dateTime.setLocalTime(LocalTime.of(8,0));
         Dish expected = new Dish(null,DISH_CREATE.getDescription(),DISH_CREATE.getPrice(),DISH_CREATE.getTime_create_dish());
         ResultActions action = mockMvc.perform(post(ADMIN_CRUD_DISH+'/'+100004)
                 .with(userHttpBasic(ADMIN1))
@@ -45,7 +42,7 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void deleteDishForVote()throws Exception {
-        setLocalTime(LocalTime.of(8,0));
+        dateTime.setLocalTime(LocalTime.of(8,0));
         mockMvc.perform(delete(ADMIN_CRUD_DISH +'/'+100008)
                 .with(userHttpBasic(ADMIN1)))
                 .andDo(print())
@@ -55,7 +52,7 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void updateDishForVote()throws Exception {
-        setLocalTime(LocalTime.of(8,0));
+        dateTime.setLocalTime(LocalTime.of(8,0));
         Dish updated= new Dish(DISH_UPDATE.getId(),DISH_UPDATE.getDescription(),DISH_UPDATE.getPrice(),DISH_UPDATE.getTime_create_dish());
         mockMvc.perform(put(ADMIN_CRUD_DISH + "/update")
                 .param("restaurant_id","100004").param("dish_id","100008")
@@ -69,7 +66,7 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void updateWrongTimeDishForVote()throws Exception {
-        setLocalTime(LocalTime.of(12,0));
+        dateTime.setLocalTime(LocalTime.of(12,0));
         Dish updated= new Dish(DISH_UPDATE.getDescription(),DISH_UPDATE.getPrice());
         mockMvc.perform(put(ADMIN_CRUD_DISH + "/update")
                 .param("restaurant_id","100004").param("dish_id","100008")
@@ -84,7 +81,7 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getDishes() throws Exception {
-        setLocalTime(LocalTime.of(8,0));
+        dateTime.setLocalTime(LocalTime.of(8,0));
         mockMvc.perform(get(ADMIN_CRUD_DISH+'/'+100004)
                 .with(userHttpBasic(ADMIN1)))
                 .andExpect(status().isOk())

@@ -10,15 +10,12 @@ import ru.javawebinar.graduateprojectjava.web.AbstractRestaurantControllerTest;
 import ru.javawebinar.graduateprojectjava.web.json.JsonUtil;
 import java.time.LocalTime;
 import java.util.List;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.graduateprojectjava.RestaurantServiceData.*;
 import static ru.javawebinar.graduateprojectjava.TestUtil.*;
 import static ru.javawebinar.graduateprojectjava.UserTestData.*;
-import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
-
 
 class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
@@ -26,7 +23,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void createRestaurant()throws Exception {
-        setLocalTime(LocalTime.of(8,0));
+        dateTime.setLocalTime(LocalTime.of(8,0));
         Restaurant expected = new Restaurant(RESTAURANT_CREATE.getDescription());
         ResultActions action = mockMvc.perform(post(ADMIN_CRUD_REST)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -55,7 +52,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void createWrongTimeRestaurant()throws Exception {
-        setLocalTime(LocalTime.of(12,0));
+        dateTime.setLocalTime(LocalTime.of(12,0));
         Restaurant expected = new Restaurant(RESTAURANT_CREATE.getDescription());
         mockMvc.perform(post(ADMIN_CRUD_REST)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +65,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void deleteRestaurant()throws Exception {
-        setLocalTime(LocalTime.of(8,0));
+        dateTime.setLocalTime(LocalTime.of(8,0));
         mockMvc.perform(delete(ADMIN_CRUD_REST +'/'+100004)
                 .with(userHttpBasic(ADMIN1)))
                 .andDo(print())
@@ -78,7 +75,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void updateRestaurant()throws Exception {
-        setLocalTime(LocalTime.of(8,0));
+        dateTime.setLocalTime(LocalTime.of(8,0));
         Restaurant updated = RESTAURANT_UPDATE;
         mockMvc.perform(put(ADMIN_CRUD_REST + '/' + 100004)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -103,7 +100,7 @@ class RestaurantCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getRestaurantsForUser()throws Exception {
-        setLocalTime(LocalTime.of(8,0));
+        dateTime.setLocalTime(LocalTime.of(8,0));
         mockMvc.perform(get(ADMIN_CRUD_REST)
                 .with(userHttpBasic(ADMIN1)))
                 .andExpect(status().isOk())
