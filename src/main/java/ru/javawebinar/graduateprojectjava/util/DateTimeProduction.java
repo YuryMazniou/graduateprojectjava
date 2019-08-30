@@ -13,7 +13,7 @@ public class DateTimeProduction implements DateTime {
 
     @Override
     public synchronized boolean checkTimeForSaveStatistic(){
-        LocalDate now=LocalDate.now();
+        LocalDate now=today();
         if(localDate.equals(now))return false;
         localDate=now;
         return true;

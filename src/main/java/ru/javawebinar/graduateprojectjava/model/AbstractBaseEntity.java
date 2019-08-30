@@ -1,7 +1,6 @@
 package ru.javawebinar.graduateprojectjava.model;
 
 import org.hibernate.Hibernate;
-import org.springframework.data.domain.Persistable;
 import ru.javawebinar.graduateprojectjava.HasId;
 
 import javax.persistence.*;

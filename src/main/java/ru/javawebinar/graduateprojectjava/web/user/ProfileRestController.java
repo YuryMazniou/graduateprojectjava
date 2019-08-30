@@ -45,9 +45,4 @@ public class ProfileRestController extends AbstractUserController {
 
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
-
-    @GetMapping(value = "/text")
-    public String testUTF() {
-        return "Русский текст";
-    }
 }

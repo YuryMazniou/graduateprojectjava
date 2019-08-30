@@ -6,7 +6,7 @@
     <Resource name="jdbc/graduateprojectjava"
               auth="Container"
               type="javax.sql.DataSource"
-              url="jdbc:hsqldb:file:D:/temp/graduateDB"
+              url="jdbc:hsqldb:mem:graduateDB"
               username="sa"
               driverClassName="org.hsqldb.jdbcDriver"
               validationQuery="SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"

@@ -16,14 +16,11 @@ import ru.javawebinar.graduateprojectjava.to.RestaurantStatisticTo;
 import ru.javawebinar.graduateprojectjava.to.RestaurantForVoteTo;
 import ru.javawebinar.graduateprojectjava.to.TodayTo;
 import ru.javawebinar.graduateprojectjava.util.DateTime;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.javawebinar.graduateprojectjava.util.DateTimeProduction.*;
 import static ru.javawebinar.graduateprojectjava.util.RestaurantUtil.*;
 import static ru.javawebinar.graduateprojectjava.util.ValidationUtil.*;
 
