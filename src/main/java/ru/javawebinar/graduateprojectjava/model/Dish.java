@@ -1,10 +1,10 @@
 package ru.javawebinar.graduateprojectjava.model;
 
+import org.hibernate.validator.constraints.SafeHtml;
 import ru.javawebinar.graduateprojectjava.View;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,6 +24,7 @@ public class Dish extends AbstractBaseEntity {
 
     @Column(name = "description")
     @NotBlank
+    @SafeHtml(groups = {View.Web.class})
     private String description;
 
     @Column(name = "price")

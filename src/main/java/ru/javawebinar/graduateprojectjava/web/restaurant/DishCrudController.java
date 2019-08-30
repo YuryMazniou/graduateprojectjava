@@ -5,13 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.javawebinar.graduateprojectjava.AuthorizedUser;
+import ru.javawebinar.graduateprojectjava.View;
 import ru.javawebinar.graduateprojectjava.model.Dish;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
-import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
-
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -34,11 +35,10 @@ public class DishCrudController {
     }
 
     @PostMapping(value = "/{restaurant_id}",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createDishForVote(@Valid @RequestBody Dish dish, @PathVariable int restaurant_id){
-        int user_id= SecurityUtil.authUserId();
+    public ResponseEntity<Dish> createDishForVote(@Validated(View.Web.class) @RequestBody Dish dish, @PathVariable int restaurant_id,@AuthenticationPrincipal AuthorizedUser authUser){
         checkNew(dish);
-        log.info("save dish {}",user_id);
-        Dish created = restaurantService.saveDishForVote(dish,restaurant_id,user_id);
+        log.info("save dish {}",authUser.getId());
+        Dish created = restaurantService.saveDishForVote(dish,restaurant_id,authUser.getId());
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(ADMIN_CRUD_DISH + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -47,26 +47,23 @@ public class DishCrudController {
 
     @DeleteMapping("/{dish_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDishForVote(@PathVariable int dish_id){
-        int user_id= SecurityUtil.authUserId();
-        log.info("delete dish  {}",user_id);
-        restaurantService.deleteDishForVote(dish_id,user_id);
+    public void deleteDishForVote(@PathVariable int dish_id,@AuthenticationPrincipal AuthorizedUser authUser){
+        log.info("delete dish  {}",authUser.getId());
+        restaurantService.deleteDishForVote(dish_id,authUser.getId());
     }
 
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateDishForVote(@Valid @RequestBody Dish dish,@RequestParam int restaurant_id,@RequestParam int dish_id){
-        int user_id= SecurityUtil.authUserId();
-        log.info("update dish  {}",user_id);
+    public void updateDishForVote(@Validated(View.Web.class) @RequestBody Dish dish,@RequestParam int restaurant_id,@RequestParam int dish_id,@AuthenticationPrincipal AuthorizedUser authUser){
+        log.info("update dish  {}",authUser.getId());
         assureIdConsistent(dish,dish_id);
-        restaurantService.saveDishForVote(dish,restaurant_id,user_id);
+        restaurantService.saveDishForVote(dish,restaurant_id,authUser.getId());
     }
 
     @GetMapping("/{restaurant_id}")
-    public List<Dish> getDishes(@PathVariable int restaurant_id){
-        int user_id= SecurityUtil.authUserId();
-        log.info("get dishes  {}",user_id);
-        return restaurantService.getDishes(restaurant_id,user_id);
+    public List<Dish> getDishes(@PathVariable int restaurant_id,@AuthenticationPrincipal AuthorizedUser authUser){
+        log.info("get dishes  {}",authUser.getId());
+        return restaurantService.getDishes(restaurant_id,authUser.getId());
     }
 }
 

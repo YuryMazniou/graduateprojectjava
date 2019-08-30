@@ -1,5 +1,6 @@
 package ru.javawebinar.graduateprojectjava.to;
 
+import org.hibernate.validator.constraints.SafeHtml;
 import ru.javawebinar.graduateprojectjava.HasId;
 
 import javax.validation.constraints.Email;
@@ -14,11 +15,13 @@ public class UserTo implements HasId,Serializable {
 
     @NotBlank
     @Size(min = 2, max = 100)
+    @SafeHtml
     private String name;
 
     @Email
     @NotBlank
     @Size(max = 100)
+    @SafeHtml
     private String email;
 
     @NotBlank

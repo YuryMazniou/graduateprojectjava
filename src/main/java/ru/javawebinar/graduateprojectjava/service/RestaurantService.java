@@ -15,14 +15,12 @@ import ru.javawebinar.graduateprojectjava.to.AllTimeTo;
 import ru.javawebinar.graduateprojectjava.to.RestaurantStatisticTo;
 import ru.javawebinar.graduateprojectjava.to.RestaurantForVoteTo;
 import ru.javawebinar.graduateprojectjava.to.TodayTo;
-
+import ru.javawebinar.graduateprojectjava.util.DateTime;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 import static ru.javawebinar.graduateprojectjava.util.RestaurantUtil.*;
 import static ru.javawebinar.graduateprojectjava.util.ValidationUtil.*;
 
@@ -38,6 +36,9 @@ public class RestaurantService {
     private EntityManager em;
 
     @Autowired
+    private DateTime dateTime;
+
+    @Autowired
     public RestaurantService(RestaurantRepository restaurantRepository, DishRepository dishRepository
             , VoteRepository voteRepository,HistoryRestaurantRepository historyRestaurantRepository) {
         this.restaurantRepository = restaurantRepository;
@@ -50,8 +51,8 @@ public class RestaurantService {
 
     @Cacheable("restaurantTo")
     public List<RestaurantForVoteTo> getRestaurantsWithDishForVote() {
-        LocalDate today = today();
-        checkTime(getTimeForUser());
+        LocalDate today = dateTime.today();
+        checkTime(dateTime.getTimeForUser());
         List<Dish>dishes=dishRepository.getDishForVote(today);
         return transformToRestaurantTo(dishes);
     }
@@ -59,12 +60,12 @@ public class RestaurantService {
     @Cacheable("todayTo")
     @Transactional
     public List<TodayTo> getTodayRestaurantsStatistic() {
-        checkTime(getTimeForStatistic());
-        LocalDate today = today();
+        checkTime(dateTime.getTimeForStatistic());
+        LocalDate today = dateTime.today();
         List<Vote>votes=voteRepository.getVotesToday(today);
         List<Restaurant>restaurants=restaurantRepository.findAll();
         List<TodayTo>statistic=transformToTodayTo(votes,restaurants);
-        if(checkTimeForSaveStatistic())saveStatistic(statistic);
+        if(dateTime.checkTimeForSaveStatistic())saveStatistic(statistic);
         return statistic;
     }
 
@@ -77,9 +78,9 @@ public class RestaurantService {
 
     @Transactional
     public List<AllTimeTo> getAllTimeRestaurantStatistic() {
-        boolean flag=getTimeForStatistic();
-        if(flag&&checkTimeForSaveStatistic()){
-            LocalDate today = today();
+        boolean flag=dateTime.getTimeForStatistic();
+        if(flag&&dateTime.checkTimeForSaveStatistic()){
+            LocalDate today = dateTime.today();
             List<Vote>votes=voteRepository.getVotesToday(today);
             List<Restaurant>restaurants=restaurantRepository.findAll();
             List<TodayTo>statistic=transformToTodayTo(votes,restaurants);
@@ -102,8 +103,8 @@ public class RestaurantService {
     @Transactional
     @CacheEvict(value = "todayTo", allEntries = true)
     public Vote saveUserVote(int restaurant_id, int user_id) {
-        LocalDate today = today();
-        checkTime(getTimeForUser());
+        LocalDate today = dateTime.today();
+        checkTime(dateTime.getTimeForUser());
         Vote voteToday=voteRepository.getVoteToday(user_id,today);
         if(voteToday==null){
             Vote vote=new Vote(restaurant_id,today);
@@ -119,13 +120,13 @@ public class RestaurantService {
     @Transactional
     @CacheEvict(value = "todayTo", allEntries = true)
     public void deleteVote(int vote_id, int user_id) {
-        LocalDate today = today();
-        checkTime(getTimeForUser());
+        LocalDate today = dateTime.today();
+        checkTime(dateTime.getTimeForUser());
         checkNotFoundWithId(voteRepository.delete(vote_id,user_id,today)!=0,vote_id);
     }
 
     public Vote getVoteToday(int user_id) {
-        LocalDate today = today();
+        LocalDate today = dateTime.today();
         return checkNotFoundWithId(voteRepository.getVoteToday(user_id,today),user_id);
     }
 ///////////////////crud Dish////////////////
@@ -133,9 +134,9 @@ public class RestaurantService {
     @Transactional
     @CacheEvict(value = "restaurantTo", allEntries = true)
     public Dish saveDishForVote(Dish dish,int restaurant_id,int user_id) {
-        checkTime(getTimeForAdmin());
+        checkTime(dateTime.getTimeForAdmin());
         Assert.notNull(dish,"restaurant must not be null");
-        LocalDate today = today();
+        LocalDate today = dateTime.today();
         dish.setTime_create_dish(today);
         dish.setUser(em.getReference(User.class,user_id));
         dish.setRestaurant(em.getReference(Restaurant.class,restaurant_id));
@@ -151,13 +152,13 @@ public class RestaurantService {
     @Transactional
     @CacheEvict(value = "restaurantTo", allEntries = true)
     public void deleteDishForVote(int dish_id,int userId) {
-        checkTime(getTimeForAdmin());
-        LocalDate today = today();
+        checkTime(dateTime.getTimeForAdmin());
+        LocalDate today = dateTime.today();
         checkNotFoundWithId(dishRepository.delete(dish_id, userId,today)!=0, dish_id);
     }
 
     public List<Dish> getDishes(int restaurant_id, int user_id) {
-        LocalDate today = today();
+        LocalDate today = dateTime.today();
         return dishRepository.getDishes( user_id,today,restaurant_id)
                 .stream()
                 .sorted((d1,d2)->d1.getDescription().compareTo(d2.getDescription()))
@@ -168,7 +169,7 @@ public class RestaurantService {
     @Transactional
     @CacheEvict(value = "todayTo", allEntries = true)
     public Restaurant saveRestaurant(Restaurant restaurant, int user_id) {
-        checkTime(getTimeForAdmin());
+        checkTime(dateTime.getTimeForAdmin());
         Assert.notNull(restaurant,"restaurant must not be null");
         restaurant.setUser(em.getReference(User.class, user_id));
         if(restaurant.isNew()) {
@@ -183,7 +184,7 @@ public class RestaurantService {
     @Transactional
     @CacheEvict(value = "todayTo", allEntries = true)
     public void deleteRestaurant(int restaurant_id, int user_id) {
-        checkTime(getTimeForAdmin());
+        checkTime(dateTime.getTimeForAdmin());
         checkNotFoundWithId(restaurantRepository.delete(restaurant_id, user_id)!=0, restaurant_id);
     }
 

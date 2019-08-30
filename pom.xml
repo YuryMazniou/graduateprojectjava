@@ -25,11 +25,13 @@
         <!--    Tests  -->
         <junit.jupiter.version>5.5.1</junit.jupiter.version>
         <hamcrest.version>1.3</hamcrest.version>
+        <json-path.version>2.4.0</json-path.version>
 
         <!-- Hibernate -->
         <hibernate.version>5.4.3.Final</hibernate.version>
         <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
         <javax-el.version>3.0.1-b11</javax-el.version>
+        <jsoup.version>1.12.1</jsoup.version>
 
         <!--Tools-->
         <ehcache.version>3.7.1</ehcache.version>
@@ -165,6 +167,11 @@
             <artifactId>hibernate-jcache</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.glassfish</groupId>
@@ -207,6 +214,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
         <!--JSON-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -236,6 +249,13 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
             <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${json-path.version}</version>
             <scope>test</scope>
         </dependency>
 

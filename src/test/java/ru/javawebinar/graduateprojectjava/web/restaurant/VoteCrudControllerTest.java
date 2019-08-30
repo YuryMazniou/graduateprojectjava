@@ -20,7 +20,6 @@ import static ru.javawebinar.graduateprojectjava.TestUtil.*;
 import static ru.javawebinar.graduateprojectjava.TestUtil.readFromJson;
 import static ru.javawebinar.graduateprojectjava.UserTestData.ADMIN2;
 import static ru.javawebinar.graduateprojectjava.UserTestData.USER2;
-import static ru.javawebinar.graduateprojectjava.util.DateTimeUtil.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
@@ -28,7 +27,7 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void saveUserVote() throws Exception {
-        setLocalTime(LocalTime.of(10,0));
+        dateTime.setLocalTime(LocalTime.of(10,0));
         Vote expected = new Vote(VOTE_CREATE.getRestaurant_id(),VOTE_CREATE.getTime_create_vote()) ;
         ResultActions action = mockMvc.perform(put(PROFILE_CRUD_VOTE+"/100005")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -44,7 +43,7 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void deleteVote() throws Exception {
-        setLocalTime(LocalTime.of(10,0));
+        dateTime.setLocalTime(LocalTime.of(10,0));
         mockMvc.perform(delete(PROFILE_CRUD_VOTE +'/'+100016)
                 .with(userHttpBasic(USER2)))
                 .andDo(print())
@@ -54,7 +53,7 @@ class VoteCrudControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
     void getVoteToday() throws Exception {
-        setLocalTime(LocalTime.of(10,0));
+        dateTime.setLocalTime(LocalTime.of(10,0));
         mockMvc.perform(get(PROFILE_CRUD_VOTE)
                 .with(userHttpBasic(USER2)))
                 .andExpect(status().isOk())

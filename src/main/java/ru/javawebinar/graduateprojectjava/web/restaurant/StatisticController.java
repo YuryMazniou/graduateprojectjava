@@ -3,16 +3,17 @@ package ru.javawebinar.graduateprojectjava.web.restaurant;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.javawebinar.graduateprojectjava.AuthorizedUser;
 import ru.javawebinar.graduateprojectjava.service.RestaurantService;
 import ru.javawebinar.graduateprojectjava.to.AllTimeTo;
 import ru.javawebinar.graduateprojectjava.to.RestaurantForVoteTo;
 import ru.javawebinar.graduateprojectjava.to.RestaurantStatisticTo;
 import ru.javawebinar.graduateprojectjava.to.TodayTo;
-import ru.javawebinar.graduateprojectjava.web.SecurityUtil;
 
 import java.util.List;
 
@@ -51,9 +52,8 @@ public class StatisticController {
     }
 
     @GetMapping("/dish/{restaurant_id}")
-    public List<RestaurantStatisticTo> getHistoryDishForRestaurant(@PathVariable int restaurant_id){
-        int user_id= SecurityUtil.authUserId();
-        log.info("get dishes statistic {}",user_id);
-        return restaurantService.getHistoryDishForAdmin(restaurant_id,user_id);
+    public List<RestaurantStatisticTo> getHistoryDishForRestaurant(@PathVariable int restaurant_id,@AuthenticationPrincipal AuthorizedUser authUser){
+        log.info("get dishes statistic {}",authUser.getId());
+        return restaurantService.getHistoryDishForAdmin(restaurant_id,authUser.getId());
     }
 }
