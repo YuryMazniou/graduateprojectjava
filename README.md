@@ -25,9 +25,33 @@ As a result, provide a link to github repository.
 
 It should contain the code and **README.md with API documentation and curl commands to get data for voting and vote.**
 
------------------------------
+----
+Приложение для выяснения того "Какой самый лучший ресторан сегодня для обеда по версии пользователей?"
+Каждый день до 9 утра админы имеют право заполнить меню ресторана актуальными на сегодня блюдами.Затем с 9-00 до 11-00
+происходит голосование зарегистрированных пользователей.После этого в 11-00 становятся доступны результаты голосования и
+собственно принятие решения куда идти покушать сегодня...
 
-###### curl samples (application deployed in application context `graduateprojectjava`).
+#####CRUD Restaurant only for admins
+######`GET /restaurants/admin/restaurant`
+######`POST /restaurants/admin/restaurant`
+######`PUT  /restaurants/admin/restaurant/{restaurant_id}`
+######`DELETE /restaurants/admin/restaurant/{restaurant_id}`
+#####CRUD Dish only for admins
+######`GET /restaurants/admin/dish/{restaurant_id}`
+######`POST /restaurants/admin/dish/{restaurant_id}`
+######`PUT /restaurants/admin/dish/update`
+######`DELETE /restaurants/admin/dish/{dish_id}`
+#####CRUD Vote for users and admins
+######`GET /restaurants/profile/vote`
+######`PUT /restaurants/profile/vote/{restaurant_id}`
+######`DELETE /restaurants/profile/vote/{vote_id}`
+#####Statistic
+######`GET /restaurants/profile/statistic/history`
+######`GET /restaurants/profile/statistic/listforvotes`
+######`GET /restaurants/profile/statistic/resultofday`
+######`GET /restaurants/profile/statistic/dish/{restaurant_id}`
+
+##### curl commands (application deployed in application context `graduateprojectjava`).
 > For windows use `Git Bash`
 ###### get All Users
 `curl -s http://localhost:8080/graduateprojectjava/restaurants/admin/users --user admin1@gmail.com:admin1`

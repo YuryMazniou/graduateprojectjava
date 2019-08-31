@@ -68,7 +68,7 @@
                         <containerId>tomcat9x</containerId>
                         <systemProperties>
                             <file.encoding>UTF-8</file.encoding>
-                            <spring.profiles.active>tomcat</spring.profiles.active>
+                            <spring.profiles.active>tomcat,test_for_cargo</spring.profiles.active>
                         </systemProperties>
                         <dependencies>
                             <dependency>

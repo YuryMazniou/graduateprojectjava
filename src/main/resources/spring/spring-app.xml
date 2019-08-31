@@ -8,5 +8,10 @@
     <import resource="spring-security.xml"/>
 
     <context:component-scan base-package="ru.javawebinar.**.service"/>
-    <bean id="production" name="dateTime" class="ru.javawebinar.graduateprojectjava.util.DateTimeProduction"/>
+    <beans profile="test_for_cargo">
+        <bean id="production" name="dateTime" class="ru.javawebinar.graduateprojectjava.util.DateTimeTestForCargo"/>
+    </beans>
+    <beans profile="production">
+        <bean id="production" name="dateTime" class="ru.javawebinar.graduateprojectjava.util.DateTimeProduction"/>
+    </beans>
 </beans>
