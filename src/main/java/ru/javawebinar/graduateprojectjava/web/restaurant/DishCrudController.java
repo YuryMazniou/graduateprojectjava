@@ -52,9 +52,9 @@ public class DishCrudController {
         restaurantService.deleteDishForVote(dish_id,authUser.getId());
     }
 
-    @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{dish_id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateDishForVote(@Validated(View.Web.class) @RequestBody Dish dish,@RequestParam int restaurant_id,@RequestParam int dish_id,@AuthenticationPrincipal AuthorizedUser authUser){
+    public void updateDishForVote(@Validated(View.Web.class) @RequestBody Dish dish,@RequestParam int restaurant_id,@PathVariable int dish_id,@AuthenticationPrincipal AuthorizedUser authUser){
         log.info("update dish  {}",authUser.getId());
         assureIdConsistent(dish,dish_id);
         restaurantService.saveDishForVote(dish,restaurant_id,authUser.getId());

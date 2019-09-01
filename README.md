@@ -59,8 +59,33 @@ It should contain the code and **README.md with API documentation and curl comma
 `curl -s http://localhost:8080/graduateprojectjava/restaurants/admin/users/100001 --user admin1@gmail.com:admin1`
 ###### get History
 `curl -s http://localhost:8080/graduateprojectjava/restaurants/profile/statistic/history --user user1@yandex.ru:password1`
+###### get Result of day after voting
+`curl -s http://localhost:8080/graduateprojectjava/restaurants/profile/statistic/resultofday --user user1@yandex.ru:password1`
+###### get List for voting
+`curl -s http://localhost:8080/graduateprojectjava/restaurants/profile/statistic/listforvotes --user user1@yandex.ru:password1`
+###### get History dishes for restaurant only by admin
+`curl -s http://localhost:8080/graduateprojectjava/restaurants/profile/statistic/dish/100004 --user admin1@gmail.com:admin1`
 ###### validate with Error
 `curl -s -X POST -d '{}' -H 'Content-Type: application/json' http://localhost:8080/graduateprojectjava/restaurants/admin/users --user admin1@gmail.com:admin1`
-`curl -s -X PUT -d '{"dateTime":"2015-05-30T07:00"}' -H 'Content-Type: application/json' http://localhost:8080/topjava/rest/profile/meals/100003 --user user1@yandex.ru:password1`
-###### give vote
-`curl -s -X PUT -d '{}' -H 'Content-Type: application/json' http://localhost:8080/graduateprojectjava/restaurants/profile/vote/1 --user user1@yandex.ru:password1`
+###### create Restaurant
+`curl -s -X POST -d '{"description":"New Restaurant"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/graduateprojectjava/restaurants/admin/restaurant --user admin1@gmail.com:admin1`
+###### delete Restaurant
+`curl -s -X DELETE http://localhost:8080/graduateprojectjava/restaurants/admin/restaurant/100023 --user admin1@gmail.com:admin1`
+###### update Restaurant
+`curl -s -X PUT -d '{"description":"Updated restaurant"}' -H 'Content-Type: application/json' http://localhost:8080/graduateprojectjava/restaurants/admin/restaurant/100004 --user admin1@gmail.com:admin1`
+###### get user's Restaurants
+`curl -s http://localhost:8080/graduateprojectjava/restaurants/admin/restaurant --user admin1@gmail.com:admin1`
+###### create Dish
+`curl -s -X POST -d '{"description":"New Dish","price":"10.1"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/graduateprojectjava/restaurants/admin/dish/100004 --user admin1@gmail.com:admin1`
+###### delete Dish
+`curl -s -X DELETE http://localhost:8080/graduateprojectjava/restaurants/admin/dish/100021 --user admin1@gmail.com:admin1`
+###### update Dish
+`curl -s -X PUT -d '{"description":"Updated dish","price":"10.9"}'  -H 'Content-Type: application/json' http://localhost:8080/graduateprojectjava/restaurants/admin/dish/100008?restaurant_id=100004 --user admin1@gmail.com:admin1`
+###### get restaurant's Dish 
+`curl -s http://localhost:8080/graduateprojectjava/restaurants/admin/dish/100004 --user admin1@gmail.com:admin1`
+###### create or update vote
+`curl -s -X PUT -d '{}' -H 'Content-Type: application/json' http://localhost:8080/graduateprojectjava/restaurants/profile/vote/100005 --user user1@yandex.ru:password1`
+###### get user's Vote
+`curl -s  http://localhost:8080/graduateprojectjava/restaurants/profile/vote --user user1@yandex.ru:password1`
+###### delete Vote
+`curl -s -X DELETE http://localhost:8080/graduateprojectjava/restaurants/profile/vote/100014 --user user1@yandex.ru:password1`

@@ -54,8 +54,8 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
     void updateDishForVote()throws Exception {
         dateTime.setLocalTime(LocalTime.of(8,0));
         Dish updated= new Dish(DISH_UPDATE.getId(),DISH_UPDATE.getDescription(),DISH_UPDATE.getPrice(),DISH_UPDATE.getTime_create_dish());
-        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update")
-                .param("restaurant_id","100004").param("dish_id","100008")
+        mockMvc.perform(put(ADMIN_CRUD_DISH + "/"+100008)
+                .param("restaurant_id","100004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN1))
                 .content(JsonUtil.writeValue(updated)))
@@ -68,13 +68,13 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
     void updateWrongTimeDishForVote()throws Exception {
         dateTime.setLocalTime(LocalTime.of(12,0));
         Dish updated= new Dish(DISH_UPDATE.getDescription(),DISH_UPDATE.getPrice());
-        mockMvc.perform(put(ADMIN_CRUD_DISH + "/update")
-                .param("restaurant_id","100004").param("dish_id","100008")
+        mockMvc.perform(put(ADMIN_CRUD_DISH + "/"+100008)
+                .param("restaurant_id","100004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN1))
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
-                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/dish/update\",\"type\":\"WRONG_TIME\",\"typeMessage\":\"Wrong time\",\"details\":[\"This action cannot be done at this time\"]}"))
+                .andExpect(content().string("{\"url\":\"http://localhost/restaurants/admin/dish/100008\",\"type\":\"WRONG_TIME\",\"typeMessage\":\"Wrong time\",\"details\":[\"This action cannot be done at this time\"]}"))
                 .andExpect(status().isUnprocessableEntity());
 
     }
@@ -105,8 +105,8 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
     @Test
     void updateInvalid() throws Exception {
         Dish invalid = new Dish( "", null);
-        mockMvc.perform(MockMvcRequestBuilders.put(ADMIN_CRUD_DISH + "/update")
-                .param("restaurant_id","100004").param("dish_id","100008")
+        mockMvc.perform(MockMvcRequestBuilders.put(ADMIN_CRUD_DISH + "/"+100008)
+                .param("restaurant_id","100004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid))
                 .with(userHttpBasic(ADMIN1)))
@@ -119,8 +119,8 @@ class DishCrudControllerTest extends AbstractRestaurantControllerTest {
     @Test
     void updateHtmlUnsafe() throws Exception {
         Dish invalid = new Dish( "<script>alert(123)</script>", new BigDecimal("1.1"));
-        mockMvc.perform(MockMvcRequestBuilders.put(ADMIN_CRUD_DISH + "/update")
-                .param("restaurant_id","100004").param("dish_id","100008")
+        mockMvc.perform(MockMvcRequestBuilders.put(ADMIN_CRUD_DISH + "/"+100008)
+                .param("restaurant_id","100004")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid))
                 .with(userHttpBasic(ADMIN1)))
