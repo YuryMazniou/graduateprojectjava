@@ -43,7 +43,7 @@ It should contain the code and **README.md with API documentation and curl comma
 `curl -s http://localhost:8080/graduateprojectjava/restaurants/admin/users/100001 --user admin1@gmail.com:admin1`
 ###### validate with Error
 `curl -s -X POST -d '{}' -H 'Content-Type: application/json' http://localhost:8080/graduateprojectjava/restaurants/admin/users --user admin1@gmail.com:admin1`
-##### Statistic for users and admins
+#### Statistic for users and admins
 ###### get History
 `curl -s http://localhost:8080/graduateprojectjava/restaurants/profile/statistic/history --user user1@yandex.ru:password1`
 ###### get Result of day after voting
@@ -52,7 +52,7 @@ It should contain the code and **README.md with API documentation and curl comma
 `curl -s http://localhost:8080/graduateprojectjava/restaurants/profile/statistic/listforvotes --user user1@yandex.ru:password1`
 ###### get History dishes for restaurant only by admin
 `curl -s http://localhost:8080/graduateprojectjava/restaurants/profile/statistic/dish/100004 --user admin1@gmail.com:admin1`
-##### CRUD Restaurant only for admins
+#### CRUD Restaurant only for admins
 ###### create Restaurant
 `curl -s -X POST -d '{"description":"New Restaurant"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/graduateprojectjava/restaurants/admin/restaurant --user admin1@gmail.com:admin1`
 ###### delete Restaurant
@@ -61,7 +61,7 @@ It should contain the code and **README.md with API documentation and curl comma
 `curl -s -X PUT -d '{"description":"Updated restaurant"}' -H 'Content-Type: application/json' http://localhost:8080/graduateprojectjava/restaurants/admin/restaurant/100004 --user admin1@gmail.com:admin1`
 ###### get user's Restaurants
 `curl -s http://localhost:8080/graduateprojectjava/restaurants/admin/restaurant --user admin1@gmail.com:admin1`
-##### CRUD Dish only for admins
+#### CRUD Dish only for admins
 ###### create Dish
 `curl -s -X POST -d '{"description":"New Dish","price":"10.1"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/graduateprojectjava/restaurants/admin/dish/100004 --user admin1@gmail.com:admin1`
 ###### delete Dish
@@ -70,7 +70,7 @@ It should contain the code and **README.md with API documentation and curl comma
 `curl -s -X PUT -d '{"description":"Updated dish","price":"10.9"}'  -H 'Content-Type: application/json' http://localhost:8080/graduateprojectjava/restaurants/admin/dish/100008?restaurant_id=100004 --user admin1@gmail.com:admin1`
 ###### get restaurant's Dish 
 `curl -s http://localhost:8080/graduateprojectjava/restaurants/admin/dish/100004 --user admin1@gmail.com:admin1`
-##### CRUD Vote for users and admins
+#### CRUD Vote for users and admins
 ###### create or update vote
 `curl -s -X PUT -d '{}' -H 'Content-Type: application/json' http://localhost:8080/graduateprojectjava/restaurants/profile/vote/100005 --user user1@yandex.ru:password1`
 ###### get user's Vote
